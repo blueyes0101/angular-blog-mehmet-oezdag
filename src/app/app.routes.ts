@@ -17,6 +17,11 @@ export const routes: Routes = [
       import('./features/blog-detail/blog-detail.module').then((m) => m.BlogDetailModule),
   },
   {
+    path: 'add-blog',
+    loadChildren: () =>
+      import('./features/add-blog/add-blog.module').then((m) => m.AddBlogModule),
+  },
+  {
     path: '**',
     redirectTo: '/blog',
   },

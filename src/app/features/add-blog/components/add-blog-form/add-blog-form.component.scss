@@ -1,0 +1,56 @@
+.blog-form-card {
+  max-width: 800px;
+  margin: 0 auto;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .tags-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .tag-input {
+      max-width: 400px;
+    }
+
+    .tag-list {
+      mat-chip {
+        margin: 0.25rem;
+      }
+    }
+  }
+
+  mat-checkbox {
+    margin: 1rem 0;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+
+    button {
+      mat-icon {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}
+
+// Dark theme
+:host-context(.dark-theme) .blog-form-card {
+  .form-actions {
+    border-top-color: rgba(255, 255, 255, 0.12);
+  }
+}

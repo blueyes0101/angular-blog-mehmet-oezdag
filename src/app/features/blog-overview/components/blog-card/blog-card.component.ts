@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgOptimizedImage, CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -12,6 +12,7 @@ import { BlogPost } from '../../../../core/schemas/blog.schemas';
   templateUrl: './blog-card.component.html',
   styleUrls: ['./blog-card.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     NgOptimizedImage,
@@ -22,11 +23,15 @@ import { BlogPost } from '../../../../core/schemas/blog.schemas';
   ],
 })
 export class BlogCardComponent {
-  @Input() post!: BlogPost;
-  @Input() index = 0;
-  @Input() isFirst = false;
-  @Input() isLast = false;
-  @Input() isEven = false;
+  // Input signals
+  post = input.required<BlogPost>();
+  index = input<number>(0);
+  isFirst = input<boolean>(false);
+  isLast = input<boolean>(false);
+  isEven = input<boolean>(false);
+  
+  // Output signals
+  likeBlog = output<{ id: number; likedByMe: boolean }>();
 
   constructor(private router: Router) {}
 
@@ -34,7 +39,15 @@ export class BlogCardComponent {
    * Navigate to blog detail page
    */
   onReadMore(): void {
-    this.router.navigate(['/blog-detail', this.post.id]);
+    this.router.navigate(['/blog-detail', this.post().id]);
+  }
+  
+  /**
+   * Handle like button click
+   */
+  onLikeClick(): void {
+    const post = this.post();
+    this.likeBlog.emit({ id: post.id, likedByMe: !post.likedByMe });
   }
 
   /**

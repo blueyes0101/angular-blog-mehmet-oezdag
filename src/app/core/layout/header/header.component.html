@@ -1,0 +1,44 @@
+<mat-toolbar color="primary" class="app-header">
+  <button mat-icon-button class="menu-button" (click)="toggleSidebar.emit()">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <a routerLink="/" class="logo-link">
+    <mat-icon>article</mat-icon>
+    <span class="logo-text">Angular Blog</span>
+  </a>
+
+  <nav class="desktop-nav">
+    @for (item of navigationItems; track item.route) {
+      <a mat-button [routerLink]="item.route" routerLinkActive="active">
+        {{ item.label }}
+      </a>
+    }
+  </nav>
+
+  <div class="spacer"></div>
+
+  <button mat-icon-button (click)="toggleDarkMode.emit()" class="theme-toggle">
+    <mat-icon>dark_mode</mat-icon>
+  </button>
+
+  <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-menu">
+    <mat-icon>account_circle</mat-icon>
+  </button>
+
+  <mat-menu #userMenu="matMenu">
+    <button mat-menu-item routerLink="/profile">
+      <mat-icon>person</mat-icon>
+      <span>Profil</span>
+    </button>
+    <button mat-menu-item routerLink="/settings">
+      <mat-icon>settings</mat-icon>
+      <span>Einstellungen</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item>
+      <mat-icon>logout</mat-icon>
+      <span>Abmelden</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>

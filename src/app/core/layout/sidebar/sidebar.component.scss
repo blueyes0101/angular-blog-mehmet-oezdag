@@ -1,0 +1,86 @@
+.app-sidebar {
+  width: 280px;
+
+  .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--mat-primary);
+    color: white;
+
+    h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 400;
+    }
+
+    button {
+      color: white;
+    }
+  }
+
+  mat-nav-list {
+    padding: 0;
+
+    h3[matSubheader] {
+      margin: 1rem 0 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    mat-list-item {
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+
+      &.active {
+        background-color: rgba(0, 0, 0, 0.08);
+      }
+
+      mat-icon {
+        margin-right: 1rem;
+      }
+    }
+  }
+
+  .sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    text-align: center;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+
+    p {
+      margin: 0;
+      font-size: 0.75rem;
+      opacity: 0.6;
+    }
+  }
+}
+
+// Dark theme
+:host-context(.dark-theme) .app-sidebar {
+  mat-nav-list {
+    mat-list-item {
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.04);
+      }
+
+      &.active {
+        background-color: rgba(255, 255, 255, 0.08);
+      }
+    }
+  }
+
+  .sidebar-footer {
+    border-top-color: rgba(255, 255, 255, 0.12);
+  }
+}

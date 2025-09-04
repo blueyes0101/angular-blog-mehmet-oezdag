@@ -1,0 +1,27 @@
+<div class="add-blog-container">
+  <div class="page-header">
+    <h1>
+      <mat-icon>create</mat-icon>
+      Neuen Blog-Post erstellen
+    </h1>
+    <p class="page-description">
+      Teilen Sie Ihr Wissen über Angular, TypeScript und moderne Webentwicklung.
+    </p>
+  </div>
+
+  <!-- Error Message -->
+  @if (saveError()) {
+    <div class="error-message">
+      <mat-icon>error</mat-icon>
+      <span>{{ saveError() }}</span>
+    </div>
+  }
+
+  <!-- Add Blog Form -->
+  <app-add-blog-form
+    [isSaving]="isSaving()"
+    (submitBlog)="onSubmitBlog($event)"
+    (cancel)="onCancel()"
+  >
+  </app-add-blog-form>
+</div>

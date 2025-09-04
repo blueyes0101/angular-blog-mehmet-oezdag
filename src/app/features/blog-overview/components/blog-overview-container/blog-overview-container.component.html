@@ -9,26 +9,33 @@
     </p>
   </div>
 
-  @if (blogData$ | async; as blogData) {
-    <!-- Filter Component -->
-    <app-blog-filter
-      [categories]="blogData.categories"
-      [selectedCategory]="selectedCategory$ | async"
-      [showOnlyFeatured]="showOnlyFeatured$ | async"
-      [isLoading]="blogData.isLoading"
-      (categoryChanged)="onCategoryChange($event)"
-      (featuredToggled)="onToggleFeatured()"
-      (filtersReset)="onResetFilters()"
-      (refreshRequested)="onRefresh()"
-    >
-    </app-blog-filter>
+  <!-- Filter Component -->
+  <app-blog-filter
+    [categories]="categories()"
+    [selectedCategory]="selectedCategory()"
+    [showOnlyFeatured]="showOnlyFeatured()"
+    [isLoading]="isLoading()"
+    (categoryChanged)="onCategoryChange($event)"
+    (featuredToggled)="onToggleFeatured()"
+    (filtersReset)="onResetFilters()"
+    (refreshRequested)="onRefresh()"
+  >
+  </app-blog-filter>
 
-    <!-- Blog List Component -->
-    <app-blog-list
-      [posts]="blogData.posts"
-      [isLoading]="blogData.isLoading"
-      [hasFilters]="!!((selectedCategory$ | async) || (showOnlyFeatured$ | async))"
-    >
-    </app-blog-list>
+  <!-- Error Message -->
+  @if (error()) {
+    <div class="error-message">
+      <mat-icon>error</mat-icon>
+      <span>{{ error() }}</span>
+    </div>
   }
+
+  <!-- Blog List Component -->
+  <app-blog-list
+    [posts]="posts()"
+    [isLoading]="isLoading()"
+    [hasFilters]="!!(selectedCategory() || showOnlyFeatured())"
+    (likeBlog)="onLikeBlog($event)"
+  >
+  </app-blog-list>
 </div>

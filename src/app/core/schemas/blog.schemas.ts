@@ -25,6 +25,8 @@ export const BlogPostSchema = z.object({
     .max(10, 'Maximum 10 tags allowed'),
   featured: z.boolean(),
   imageUrl: z.string().url('Image URL must be a valid URL'),
+  likedByMe: z.boolean().optional().default(false),
+  likes: z.number().int().nonnegative().optional().default(0),
 });
 
 /**

@@ -1,12 +1,12 @@
 <mat-card
   class="blog-post-card"
-  [class.featured]="post.featured"
-  [class.first-post]="isFirst"
-  [class.last-post]="isLast"
-  [class.even-post]="isEven"
+  [class.featured]="post().featured"
+  [class.first-post]="isFirst()"
+  [class.last-post]="isLast()"
+  [class.even-post]="isEven()"
 >
   <!-- Featured Badge -->
-  @if (post.featured) {
+  @if (post().featured) {
     <div class="featured-badge">
       <mat-icon>star</mat-icon>
       Featured
@@ -16,8 +16,8 @@
   <!-- Post Image -->
   <div class="post-image-container">
     <img
-      [ngSrc]="post.imageUrl"
-      [alt]="post.title"
+      [ngSrc]="post().imageUrl"
+      [alt]="post().title"
       class="post-image"
       loading="lazy"
       width="350"
@@ -26,23 +26,23 @@
   </div>
 
   <mat-card-header>
-    <mat-card-title>{{ post.title }}</mat-card-title>
+    <mat-card-title>{{ post().title }}</mat-card-title>
     <mat-card-subtitle>
-      von {{ post.author }} • {{ formatDate(post.publishDate) }}
+      von {{ post().author }} • {{ formatDate(post().publishDate) }}
     </mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content>
     <p class="post-preview">
-      {{ getPreviewContent(post.content) }}
+      {{ getPreviewContent(post().content) }}
     </p>
 
     <div class="post-meta">
       <mat-chip-set>
-        <mat-chip [color]="getCategoryColor(post.category)">
-          {{ post.category }}
+        <mat-chip [color]="getCategoryColor(post().category)">
+          {{ post().category }}
         </mat-chip>
-        @for (tag of post.tags; track tag) {
+        @for (tag of post().tags; track tag) {
           <mat-chip>{{ tag }}</mat-chip>
         }
       </mat-chip-set>
@@ -57,8 +57,11 @@
     <button mat-icon-button>
       <mat-icon>share</mat-icon>
     </button>
-    <button mat-icon-button>
-      <mat-icon>bookmark_border</mat-icon>
+    <button mat-icon-button (click)="onLikeClick()" [color]="post().likedByMe ? 'warn' : ''">
+      <mat-icon>{{ post().likedByMe ? 'favorite' : 'favorite_border' }}</mat-icon>
+      @if (post().likes && post().likes > 0) {
+        <span class="like-count">{{ post().likes }}</span>
+      }
     </button>
   </mat-card-actions>
 </mat-card>

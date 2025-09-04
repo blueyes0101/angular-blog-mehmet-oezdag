@@ -1,0 +1,72 @@
+.not-found-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 200px);
+  padding: 2rem;
+
+  .not-found-card {
+    max-width: 600px;
+    text-align: center;
+    padding: 3rem;
+
+    .error-code {
+      font-size: 8rem;
+      font-weight: 700;
+      color: var(--mat-primary);
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .error-icon {
+      font-size: 4rem;
+      width: 4rem;
+      height: 4rem;
+      color: var(--mat-warn);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: rgba(0, 0, 0, 0.7);
+    }
+
+    .sub-text {
+      font-size: 1rem;
+      color: rgba(0, 0, 0, 0.5);
+      margin-bottom: 2rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+
+      button {
+        mat-icon {
+          margin-right: 0.5rem;
+        }
+      }
+    }
+  }
+}
+
+// Dark theme
+:host-context(.dark-theme) .not-found-container {
+  .not-found-card {
+    p {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .sub-text {
+      color: rgba(255, 255, 255, 0.5);
+    }
+  }
+}

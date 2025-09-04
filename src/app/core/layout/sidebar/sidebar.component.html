@@ -1,0 +1,38 @@
+<mat-sidenav
+  class="app-sidebar"
+  mode="over"
+  position="start"
+  [opened]="isOpen()"
+  (closed)="closeSidebar.emit()"
+>
+  <div class="sidebar-header">
+    <h2>Angular Blog</h2>
+    <button mat-icon-button (click)="closeSidebar.emit()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-nav-list>
+    <h3 matSubheader>Navigation</h3>
+    @for (item of navigationItems; track item.route) {
+      <mat-list-item [routerLink]="item.route" (click)="onNavigate()">
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        <span matListItemTitle>{{ item.label }}</span>
+      </mat-list-item>
+    }
+    
+    <mat-divider></mat-divider>
+    
+    <h3 matSubheader>Weitere</h3>
+    @for (item of secondaryItems; track item.route) {
+      <mat-list-item [routerLink]="item.route" (click)="onNavigate()">
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        <span matListItemTitle>{{ item.label }}</span>
+      </mat-list-item>
+    }
+  </mat-nav-list>
+
+  <div class="sidebar-footer">
+    <p>Version 1.0.0</p>
+  </div>
+</mat-sidenav>
