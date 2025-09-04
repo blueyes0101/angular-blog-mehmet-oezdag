@@ -1,0 +1,135 @@
+<mat-card class="blog-form-card">
+  <mat-card-content>
+    <form (ngSubmit)="onSubmit()" #blogForm="ngForm">
+      <!-- Title -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Titel</mat-label>
+        <input
+          matInput
+          [(ngModel)]="title"
+          name="title"
+          required
+          placeholder="Geben Sie einen aussagekräftigen Titel ein"
+          [disabled]="isSaving()"
+        />
+        <mat-hint>Der Titel sollte den Inhalt des Posts klar beschreiben</mat-hint>
+      </mat-form-field>
+
+      <!-- Author -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Autor</mat-label>
+        <input
+          matInput
+          [(ngModel)]="author"
+          name="author"
+          required
+          placeholder="Ihr Name"
+          [disabled]="isSaving()"
+        />
+      </mat-form-field>
+
+      <!-- Category -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Kategorie</mat-label>
+        <mat-select [(ngModel)]="category" name="category" required [disabled]="isSaving()">
+          @for (cat of categories; track cat) {
+            <mat-option [value]="cat">{{ cat }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Image URL -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Bild-URL</mat-label>
+        <input
+          matInput
+          [(ngModel)]="imageUrl"
+          name="imageUrl"
+          required
+          placeholder="https://example.com/image.jpg"
+          [disabled]="isSaving()"
+        />
+        <mat-hint>URL zu einem Vorschaubild für den Blog-Post</mat-hint>
+      </mat-form-field>
+
+      <!-- Content -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Inhalt</mat-label>
+        <textarea
+          matInput
+          [(ngModel)]="content"
+          name="content"
+          required
+          rows="10"
+          placeholder="Schreiben Sie hier Ihren Blog-Post..."
+          [disabled]="isSaving()"
+        ></textarea>
+        <mat-hint>Mindestens 100 Zeichen</mat-hint>
+      </mat-form-field>
+
+      <!-- Tags -->
+      <div class="tags-section">
+        <mat-form-field appearance="outline" class="tag-input">
+          <mat-label>Tags hinzufügen</mat-label>
+          <input
+            matInput
+            [(ngModel)]="newTag"
+            name="newTag"
+            placeholder="Tag eingeben und Enter drücken"
+            (keyup.enter)="addTag()"
+            [disabled]="isSaving()"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="addTag()"
+            [disabled]="!newTag().trim() || isSaving()"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <mat-chip-set class="tag-list">
+          @for (tag of tags(); track tag) {
+            <mat-chip [removable]="!isSaving()" (removed)="removeTag(tag)">
+              {{ tag }}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+          }
+        </mat-chip-set>
+      </div>
+
+      <!-- Featured Checkbox -->
+      <mat-checkbox [(ngModel)]="featured" name="featured" [disabled]="isSaving()">
+        Als Featured Post markieren
+      </mat-checkbox>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button
+          mat-raised-button
+          type="button"
+          (click)="onCancel()"
+          [disabled]="isSaving()"
+        >
+          Abbrechen
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="!isFormValid() || isSaving()"
+        >
+          @if (isSaving()) {
+            <mat-icon>sync</mat-icon>
+            Speichern...
+          } @else {
+            <mat-icon>save</mat-icon>
+            Blog-Post erstellen
+          }
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

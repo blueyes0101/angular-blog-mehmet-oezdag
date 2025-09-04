@@ -1,0 +1,32 @@
+<footer class="app-footer">
+  <mat-toolbar color="primary">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Angular Blog</h3>
+        <p>Ein modernes Blog-System mit Angular 19</p>
+        <p>&copy; {{ currentYear }} Mehmet Oezdag. Alle Rechte vorbehalten.</p>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Links</h3>
+        <nav>
+          <a href="/blog">Blog</a>
+          <a href="/add-blog">Neuer Post</a>
+          <a href="/about">Über uns</a>
+          <a href="/contact">Kontakt</a>
+        </nav>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Folgen Sie uns</h3>
+        <div class="social-links">
+          @for (link of socialLinks; track link.url) {
+            <a [href]="link.url" [attr.aria-label]="link.label" target="_blank" rel="noopener">
+              <mat-icon>{{ link.icon }}</mat-icon>
+            </a>
+          }
+        </div>
+      </div>
+    </div>
+  </mat-toolbar>
+</footer>

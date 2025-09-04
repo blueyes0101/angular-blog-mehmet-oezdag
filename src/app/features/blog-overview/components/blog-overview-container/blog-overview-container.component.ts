@@ -1,111 +1,99 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable, BehaviorSubject, combineLatest, of } from 'rxjs';
-import { map, switchMap, startWith, catchError } from 'rxjs/operators';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
+import { combineLatest } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { BlogService } from '../../../../core/services/blog.service';
-import { BlogPost } from '../../../../core/schemas/blog.schemas';
+import { BlogStateStore } from '../../../../core/state/blog-state.store';
 import { BlogFilterComponent } from '../blog-filter/blog-filter.component';
 import { BlogListComponent } from '../blog-list/blog-list.component';
-
-interface BlogData {
-  posts: BlogPost[];
-  categories: string[];
-  isLoading: boolean;
-}
 
 @Component({
   selector: 'app-blog-overview-container',
   templateUrl: './blog-overview-container.component.html',
   styleUrls: ['./blog-overview-container.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MatIconModule, BlogFilterComponent, BlogListComponent],
 })
 export class BlogOverviewContainerComponent implements OnInit {
-  // Reactive state subjects
-  private selectedCategorySubject = new BehaviorSubject<string>('');
-  private showOnlyFeaturedSubject = new BehaviorSubject<boolean>(false);
-  private refreshTriggerSubject = new BehaviorSubject<void>(undefined);
+  // Inject services
+  private readonly blogService = inject(BlogService);
+  private readonly blogState = inject(BlogStateStore);
+  
+  // State signals
+  readonly posts = this.blogState.filteredPosts;
+  readonly categories = this.blogState.categories;
+  readonly selectedCategory = this.blogState.selectedCategory;
+  readonly showOnlyFeatured = this.blogState.showOnlyFeatured;
+  readonly isLoading = this.blogState.isLoading;
+  readonly error = this.blogState.error;
 
-  // Reactive streams
-  selectedCategory$ = this.selectedCategorySubject.asObservable();
-  showOnlyFeatured$ = this.showOnlyFeaturedSubject.asObservable();
-
-  // Combined blog data stream
-  blogData$: Observable<BlogData> = combineLatest([
-    this.selectedCategory$,
-    this.showOnlyFeatured$,
-    this.refreshTriggerSubject,
-  ]).pipe(
-    switchMap(([category, featured]) => {
-      // Set loading state immediately
-      const loadingState: BlogData = { posts: [], categories: [], isLoading: true };
-
-      const postsRequest = this.getPostsRequest(category, featured);
-      const categoriesRequest = this.blogService.getCategories().pipe(catchError(() => of([])));
-
-      return combineLatest([postsRequest, categoriesRequest]).pipe(
-        map(([posts, categories]) => ({
-          posts,
-          categories,
-          isLoading: false,
-        })),
-        startWith(loadingState),
-        catchError((error) => {
-          console.error('Error loading blog data:', error);
-          return of({ posts: [], categories: [], isLoading: false });
-        }),
-      );
-    }),
-  );
-
-  constructor(private blogService: BlogService) {}
+  constructor() {}
 
   ngOnInit(): void {
-    // Initialize component - data loading is handled by the reactive stream
-    console.warn('Blog overview container initialized');
+    // Load initial data
+    this.loadBlogData();
   }
 
   /**
-   * Gets the appropriate posts request based on filters
+   * Loads blog data from the service
    */
-  private getPostsRequest(category: string, featured: boolean): Observable<BlogPost[]> {
-    if (featured) {
-      return this.blogService.getFeaturedPosts();
-    } else if (category) {
-      return this.blogService.getPostsByCategory(category);
-    } else {
-      return this.blogService.getPosts();
-    }
+  private loadBlogData(): void {
+    this.blogState.setLoading(true);
+    
+    // Load posts and categories
+    combineLatest([
+      this.blogService.getPosts(),
+      this.blogService.getCategories()
+    ]).pipe(
+      finalize(() => this.blogState.setLoading(false))
+    ).subscribe({
+      next: ([posts, categories]) => {
+        this.blogState.setPosts(posts);
+        this.blogState.setCategories(categories);
+        this.blogState.clearError();
+      },
+      error: (error) => {
+        console.error('Error loading blog data:', error);
+        this.blogState.setError('Fehler beim Laden der Blog-Daten');
+      }
+    });
   }
 
   /**
    * Updates the selected category
    */
   onCategoryChange(category: string): void {
-    this.selectedCategorySubject.next(category);
+    this.blogState.setSelectedCategory(category);
   }
 
   /**
    * Toggles featured posts filter
    */
   onToggleFeatured(): void {
-    const currentValue = this.showOnlyFeaturedSubject.value;
-    this.showOnlyFeaturedSubject.next(!currentValue);
+    this.blogState.setShowOnlyFeatured(!this.showOnlyFeatured());
   }
 
   /**
    * Resets all filters
    */
   onResetFilters(): void {
-    this.selectedCategorySubject.next('');
-    this.showOnlyFeaturedSubject.next(false);
+    this.blogState.resetFilters();
   }
 
   /**
    * Handles refresh request
    */
   onRefresh(): void {
-    this.refreshTriggerSubject.next();
+    this.loadBlogData();
+  }
+  
+  /**
+   * Handles like event from blog card
+   */
+  onLikeBlog(event: { id: number; likedByMe: boolean }): void {
+    this.blogState.toggleLikePost(event.id, event.likedByMe);
+    // In a real app, you would also make an API call here
   }
 }

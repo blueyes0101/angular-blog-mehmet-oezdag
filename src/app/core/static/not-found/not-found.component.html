@@ -1,0 +1,22 @@
+<div class="not-found-container">
+  <mat-card class="not-found-card">
+    <mat-card-content>
+      <div class="error-code">404</div>
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <h1>Seite nicht gefunden</h1>
+      <p>Die angeforderte Seite konnte nicht gefunden werden.</p>
+      <p class="sub-text">Möglicherweise wurde die Seite verschoben oder gelöscht.</p>
+      
+      <div class="actions">
+        <button mat-raised-button color="primary" routerLink="/">
+          <mat-icon>home</mat-icon>
+          Zur Startseite
+        </button>
+        <button mat-raised-button routerLink="/blog">
+          <mat-icon>article</mat-icon>
+          Zum Blog
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

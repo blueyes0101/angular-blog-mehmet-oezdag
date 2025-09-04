@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
@@ -10,7 +10,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -21,6 +21,7 @@ import { MatInputModule } from '@angular/material/input';
 
 import { DemoComponent } from './demo/demo.component';
 import { BlogPost } from './core/schemas/blog.schemas';
+import { RouterStateStore } from './core/state/router-state.store';
 
 interface TestResult {
   success: boolean;
@@ -39,6 +40,7 @@ interface TestResult {
     MatCardModule,
     MatButtonModule,
     MatIconModule,
+    MatProgressBarModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -53,6 +55,10 @@ interface TestResult {
 })
 export class AppComponent implements OnInit {
   title = 'Angular Blog - Mehmet Oezdag';
+  
+  // Inject RouterStateStore
+  readonly routerState = inject(RouterStateStore);
+  readonly isLoading = this.routerState.isLoading;
 
   // UI State
   isDarkMode = false;

@@ -1,5 +1,5 @@
 <!-- Loading Indicator -->
-@if (isLoading) {
+@if (isLoading()) {
   <div class="loading-container">
     <mat-spinner diameter="50"></mat-spinner>
     <p>Blog-Posts werden geladen...</p>
@@ -7,10 +7,10 @@
 }
 
 <!-- Blog Posts Grid -->
-@if (!isLoading) {
+@if (!isLoading()) {
   <div class="blog-posts-grid">
     @for (
-      post of posts;
+      post of posts();
       track trackByPost($index, post);
       let i = $index;
       let isFirst = $first;
@@ -23,6 +23,7 @@
         [isFirst]="isFirst"
         [isLast]="isLast"
         [isEven]="isEven"
+        (likeBlog)="likeBlog.emit($event)"
       >
       </app-blog-card>
     } @empty {
@@ -33,7 +34,7 @@
             <mat-icon class="empty-icon">inbox</mat-icon>
             <h2>Keine Blog-Posts gefunden</h2>
             <p>
-              @if (hasFilters) {
+              @if (hasFilters()) {
                 Versuchen Sie andere Filter oder setzen Sie die Filter zurück.
               } @else {
                 Es sind derzeit keine Blog-Posts verfügbar.
