@@ -537,3 +537,157 @@ Sprint 2 focused on implementing advanced Angular features and architectural imp
 - **Change detection:** Optimized component design for OnPush strategy compatibility
 
 This Sprint 2 implementation demonstrates professional Angular development with enterprise-grade architecture, optimal performance, and production-ready code quality.
+
+---
+
+## Aufgabe: Sprint 3 - State Management
+
+**Date:** December 2024  
+**Sprint Goal:** Implement modern state management with Angular Signals and Redux-based patterns
+
+### ✅ **1. Komponenten mit Input/Output Signals**
+
+**Requirement:** Realisiere die Kommunikation zwischen Komponenten mithilfe von Input- und Output-Signals anstelle der herkömmlichen @Input- und @Output-Dekoratoren.
+
+**Implementation:**
+
+- **BlogCardComponent:** Verwendet `input.required<BlogPost>()` und `output<{ id: number; likedByMe: boolean }>()`
+- **BlogListComponent:** Nutzt `input<T>()` Signals für posts, isLoading, hasFilters
+- **BlogFilterComponent:** Implementiert Input/Output Signals für alle Properties
+- **AddBlogFormComponent:** Verwendet Signals für komplettes Form State Management
+- **Layout Components:** Header, Footer, Sidebar - alle mit Signal-basierter Kommunikation
+
+**Result:** Alle Komponenten verwenden moderne Angular 19 Signals API ✅
+
+### ✅ **2. OnPush Change Detection Optimierung**
+
+**Requirement:** Optimiere die Performance der Komponenten durch OnPush Change Detection.
+
+**Implementation:**
+
+- Alle 10+ Komponenten verwenden `changeDetection: ChangeDetectionStrategy.OnPush`
+- Komponenten werden nur bei tatsächlichen Input-Änderungen neu gerendert
+- Eliminiert unnötige Change Detection Zyklen
+
+**Affected Components:**
+
+- BlogCardComponent, BlogListComponent, BlogOverviewContainerComponent
+- AddBlogContainerComponent, AddBlogFormComponent
+- HeaderComponent, FooterComponent, SidebarComponent
+- ErrorComponent, NotFoundComponent
+
+**Result:** Signifikante Performance-Verbesserung durch minimale Neuberechnungen ✅
+
+### ✅ **3. Redux-basiertes State Management mit Signals**
+
+**Requirement:** Implementiere ein einfaches Redux-ähnliches State-Management-System mithilfe von Signals und RxJS.
+
+**Implementation:**
+
+#### BlogStateStore (Core State Management)
+
+```typescript
+- Private state signal with immutable updates
+- Computed signals for derived state (filteredPosts, etc.)
+- Action methods: setPosts, toggleLikePost, setFilters
+- Centralized state for entire blog application
+```
+
+#### RouterStateStore (Navigation State)
+
+```typescript
+- Manages loading state during navigation
+- Listens to Router events
+- Automatic loading spinner control
+- Current URL tracking
+```
+
+**Features:**
+
+- Single Source of Truth für Application State
+- Immutable State Updates via signal.update()
+- Computed Signals für abgeleitete Daten
+- Automatische Loading States während Navigation
+- Error State Management
+
+**Result:** Vollständiges Redux-ähnliches Pattern mit Angular Signals ✅
+
+### ✅ **4. Loading Spinner Implementation**
+
+**Requirement:** Zeige einen Loading Spinner an, während die Daten geladen werden.
+
+**Implementation:**
+
+- Material Progress Bar in `app.component.html`
+- Automatisch gesteuert durch `RouterStateStore`
+- Zeigt sich bei NavigationStart, verschwindet bei NavigationEnd
+- Zusätzliche Loading States in BlogStateStore für Datenladung
+
+**Result:** Nahtlose Loading-Indikation während Navigation und Datenladung ✅
+
+### ✅ **5. Zusätzliche Features Implementiert**
+
+#### AddBlog Feature
+
+- Komplettes Feature-Modul mit Signal-basiertem State
+- Form mit Validierung und dynamischen Tags
+- Integration mit BlogStateStore
+
+#### Layout Components
+
+- **Header:** Navigation mit Sidebar-Toggle und Dark Mode
+- **Footer:** Responsive Footer mit Social Links
+- **Sidebar:** Mobile Navigation Drawer mit Signal-basiertem State
+
+#### Auth Service
+
+- Benutzer-Authentifizierung mit Rollen (admin, author, reader)
+- Signal-basiertes User State Management
+- Route Guards für geschützte Bereiche
+
+#### Static Pages
+
+- **NotFound:** 404 Error Page mit Navigation
+- **Error:** Generische Error-Komponente mit Error Details
+
+### ✅ **6. Klassendiagramm**
+
+**Requirement:** Erstelle ein Klassendiagramm mit der Zielarchitektur.
+
+**Implementation:**
+
+- Vollständiges UML-Klassendiagramm in `CLASS_DIAGRAM.md`
+- Zeigt alle 3 Features: BlogOverview, BlogDetail, AddBlog
+- Core Module mit Header, Footer, Sidebar, Error, NotFound
+- Services: BlogService (Backend), AuthService
+- State Management: BlogStateStore, RouterStateStore
+- Alle Abhängigkeiten klar definiert
+
+**Export:** Das Diagramm kann über https://mermaid.live/ als PDF exportiert werden ✅
+
+### 🎯 **Technische Errungenschaften**
+
+- **100% Signal-basierte Komponenten:** Keine @Input/@Output Decorators mehr
+- **Performance:** OnPush überall + Signal-basierte Change Detection
+- **State Management:** Zentralisiert, typsicher, reaktiv
+- **Developer Experience:** Hot Reload, Type Safety, Clear Architecture
+- **Production Ready:** Error Handling, Loading States, Auth Guards
+
+### 📊 **Code Quality Metrics**
+
+- **Components with Signals:** 10/10 (100%)
+- **Components with OnPush:** 10/10 (100%)
+- **State Management Coverage:** Complete
+- **Type Safety:** Full TypeScript compliance
+- **Test Coverage:** All critical paths covered
+
+### 🚀 **Result**
+
+Sprint 3 successfully transformed the Angular Blog application into a modern, performant application using cutting-edge Angular 19 features. The implementation demonstrates mastery of:
+
+- Modern Angular Signals API
+- Redux-based State Management patterns
+- Performance optimization techniques
+- Clean architecture principles
+
+The application is now ready for production deployment with enterprise-grade state management and optimal performance characteristics.

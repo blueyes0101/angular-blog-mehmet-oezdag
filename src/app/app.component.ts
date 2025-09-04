@@ -55,7 +55,7 @@ interface TestResult {
 })
 export class AppComponent implements OnInit {
   title = 'Angular Blog - Mehmet Oezdag';
-  
+
   // Inject RouterStateStore
   readonly routerState = inject(RouterStateStore);
   readonly isLoading = this.routerState.isLoading;

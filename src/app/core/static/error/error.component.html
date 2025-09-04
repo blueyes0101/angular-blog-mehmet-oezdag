@@ -4,13 +4,15 @@
       <div class="error-code">{{ errorCode() }}</div>
       <mat-icon class="error-icon">report_problem</mat-icon>
       <h1>{{ errorMessage() }}</h1>
-      
+
       @if (errorDetails()) {
         <p class="error-details">{{ errorDetails() }}</p>
       }
-      
-      <p class="sub-text">Bitte versuchen Sie es später erneut oder kontaktieren Sie den Support.</p>
-      
+
+      <p class="sub-text">
+        Bitte versuchen Sie es später erneut oder kontaktieren Sie den Support.
+      </p>
+
       <div class="actions">
         <button mat-raised-button color="primary" routerLink="/">
           <mat-icon>home</mat-icon>

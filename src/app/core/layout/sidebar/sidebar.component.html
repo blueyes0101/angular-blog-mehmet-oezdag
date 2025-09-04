@@ -20,9 +20,9 @@
         <span matListItemTitle>{{ item.label }}</span>
       </mat-list-item>
     }
-    
+
     <mat-divider></mat-divider>
-    
+
     <h3 matSubheader>Weitere</h3>
     @for (item of secondaryItems; track item.route) {
       <mat-list-item [routerLink]="item.route" (click)="onNavigate()">

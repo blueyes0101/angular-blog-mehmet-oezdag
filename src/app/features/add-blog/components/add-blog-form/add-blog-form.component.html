@@ -107,12 +107,7 @@
 
       <!-- Actions -->
       <div class="form-actions">
-        <button
-          mat-raised-button
-          type="button"
-          (click)="onCancel()"
-          [disabled]="isSaving()"
-        >
+        <button mat-raised-button type="button" (click)="onCancel()" [disabled]="isSaving()">
           Abbrechen
         </button>
         <button

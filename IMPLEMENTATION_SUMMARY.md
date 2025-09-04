@@ -17,6 +17,7 @@ Alle Komponenten wurden auf die moderne Angular Signals API migriert:
 ### 2. OnPush Change Detection ✅
 
 Alle Komponenten wurden mit `ChangeDetectionStrategy.OnPush` optimiert:
+
 - Verbesserte Performance durch minimale Neuberechnungen
 - Komponenten werden nur bei tatsächlichen Input-Änderungen neu gerendert
 
@@ -25,12 +26,14 @@ Alle Komponenten wurden mit `ChangeDetectionStrategy.OnPush` optimiert:
 Implementierte State Stores:
 
 #### BlogStateStore
+
 - Zentraler State für Blog-Daten
 - Computed Signals für gefilterte Posts
 - Immutable State Updates
 - Actions: setPosts, toggleLikePost, setFilters, etc.
 
 #### RouterStateStore
+
 - Verwaltet Navigation Loading State
 - Zeigt automatisch Loading Spinner während Navigation
 - Reagiert auf Router Events
@@ -45,24 +48,28 @@ Implementierte State Stores:
 ## Zusätzliche Implementierungen
 
 ### Features
+
 - **AddBlog Feature**: Komplettes Modul mit Container und Form-Komponente
 - **Blog Overview**: Aktualisiert mit State Management
 - **Blog Detail**: Vorbereitet für State Management Integration
 
 ### Core Components
+
 - **Header**: Navigation mit Sidebar-Toggle
-- **Footer**: Responsive Footer mit Social Links  
+- **Footer**: Responsive Footer mit Social Links
 - **Sidebar**: Mobile Navigation Drawer
 - **NotFound**: 404 Error Page
 - **Error**: Generische Error-Komponente
 
 ### Services
+
 - **AuthService**: Benutzer-Authentifizierung mit Rollen
 - **Auth Guards**: Route Protection basierend auf Authentifizierung
 
 ## Architektur
 
 Das erstellte Klassendiagramm zeigt die vollständige Architektur mit:
+
 - 3 Feature-Modulen (BlogOverview, BlogDetail, AddBlog)
 - Core-Modul mit Layout und Services
 - State Management Layer

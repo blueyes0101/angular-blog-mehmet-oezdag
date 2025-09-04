@@ -29,6 +29,8 @@ export class BlogService {
       tags: ['Angular', 'TypeScript', 'Web Development'],
       featured: true,
       imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=400&fit=crop',
+      likedByMe: false,
+      likes: 42,
     },
     {
       id: 2,
@@ -41,6 +43,8 @@ export class BlogService {
       tags: ['CSS', 'Grid', 'Flexbox', 'Responsive Design'],
       featured: false,
       imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=400&fit=crop',
+      likedByMe: true,
+      likes: 15,
     },
     {
       id: 3,
@@ -53,6 +57,8 @@ export class BlogService {
       tags: ['TypeScript', 'JavaScript', 'Best Practices'],
       featured: true,
       imageUrl: 'https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800&h=400&fit=crop',
+      likedByMe: false,
+      likes: 38,
     },
     {
       id: 4,
@@ -65,6 +71,8 @@ export class BlogService {
       tags: ['Azure', 'Deployment', 'Static Web Apps'],
       featured: false,
       imageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=400&fit=crop',
+      likedByMe: false,
+      likes: 8,
     },
     {
       id: 5,
@@ -77,6 +85,8 @@ export class BlogService {
       tags: ['Angular Material', 'UI/UX', 'Responsive Design'],
       featured: true,
       imageUrl: 'https://images.unsplash.com/photo-1559028006-448665bd7c7f?w=800&h=400&fit=crop',
+      likedByMe: true,
+      likes: 27,
     },
   ];
 

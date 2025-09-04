@@ -23,13 +23,19 @@ describe('Blog Schemas (ZOD Validation)', () => {
       tags: ['test', 'blog'],
       featured: true,
       imageUrl: 'https://example.com/image.jpg',
+      likedByMe: false,
+      likes: 10,
     };
 
     it('should validate a valid blog post', () => {
       const result = BlogPostSchema.safeParse(validBlogPost);
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data).toEqual(validBlogPost);
+        expect(result.data).toEqual({
+          ...validBlogPost,
+          likedByMe: false,
+          likes: 0,
+        });
       }
     });
 
@@ -74,8 +80,11 @@ describe('Blog Schemas (ZOD Validation)', () => {
         author: 'Author 1',
         publishDate: '2024-01-15',
         category: 'Test',
+        tags: ['test'],
         featured: false,
         imageUrl: 'https://example.com/image1.jpg',
+        likedByMe: false,
+        likes: 0,
       },
       {
         id: 2,
@@ -84,8 +93,11 @@ describe('Blog Schemas (ZOD Validation)', () => {
         author: 'Author 2',
         publishDate: '2024-01-16',
         category: 'Test',
+        tags: ['test'],
         featured: true,
         imageUrl: 'https://example.com/image2.jpg',
+        likedByMe: false,
+        likes: 5,
       },
     ];
 
@@ -144,6 +156,8 @@ describe('Blog Schemas (ZOD Validation)', () => {
         tags: ['test'],
         featured: false,
         imageUrl: 'https://example.com/test.jpg',
+        likedByMe: false,
+        likes: 0,
       };
 
       const blogPosts: BlogPostArray = [blogPost];
@@ -168,12 +182,18 @@ describe('Blog Schemas (ZOD Validation)', () => {
       tags: ['test'],
       featured: false,
       imageUrl: 'https://example.com/test.jpg',
+      likedByMe: false,
+      likes: 0,
     };
 
     it('validateBlogPost should parse valid data', () => {
       expect(() => validateBlogPost(validPost)).not.toThrow();
       const result = validateBlogPost(validPost);
-      expect(result).toEqual(validPost);
+      expect(result).toEqual({
+        ...validPost,
+        likedByMe: false,
+        likes: 0,
+      });
     });
 
     it('validateBlogPost should throw on invalid data', () => {

@@ -52,6 +52,7 @@ ng add @angular-eslint/schematics
 ```
 
 Die Konfiguration befindet sich in `eslint.config.js` und enthält:
+
 - TypeScript-spezifische Regeln
 - Angular-Best-Practices
 - Prettier-Integration
@@ -63,6 +64,7 @@ npm install --save-dev prettier eslint-config-prettier eslint-plugin-prettier
 ```
 
 Konfigurationsdateien:
+
 - `.prettierrc.json`: Formatting-Regeln
 - `.prettierignore`: Ausgeschlossene Dateien
 
@@ -84,6 +86,7 @@ npx husky init
 ```
 
 Hooks:
+
 - **pre-commit**: Führt ESLint und Prettier auf staged files aus
 - **commit-msg**: Validiert Commit-Messages mit CommitLint
 
@@ -94,6 +97,7 @@ Konfiguration in `.lintstagedrc.json`.
 ### GitHub Actions Workflows
 
 1. **azure-deploy.yml**: Automatisches Deployment auf Azure
+
    - Trigger: Push auf main branch
    - Steps: Build, Test, Deploy
 
@@ -120,6 +124,7 @@ Konfiguration in `.lintstagedrc.json`.
 ### Konfiguration
 
 Die Datei `staticwebapp.config.json` enthält:
+
 - Routing-Regeln für Angular SPA
 - Sicherheitsheader
 - MIME-Type-Mappings
@@ -136,11 +141,13 @@ Die Datei `staticwebapp.config.json` enthält:
 ### Implementierte Sicherheitsmaßnahmen
 
 1. **Dependency Scanning**
+
    - npm audit bei jedem Build
    - OWASP Dependency Check
    - Automatische Security Updates
 
 2. **Security Headers**
+
    - Content Security Policy
    - X-Frame-Options
    - X-Content-Type-Options
@@ -172,6 +179,7 @@ npm run format:check # Formatting überprüfen
 ### Häufige Probleme
 
 1. **Husky Hooks funktionieren nicht**
+
    ```bash
    npx husky install
    chmod +x .husky/pre-commit
@@ -179,6 +187,7 @@ npm run format:check # Formatting überprüfen
    ```
 
 2. **ESLint Fehler**
+
    ```bash
    npm run lint:fix
    ```
@@ -211,6 +220,7 @@ npm audit fix
 ## Kontakt
 
 Bei Fragen oder Problemen:
+
 - **Autor**: Mehmet Oezdag
 - **Institution**: HFTM
-- **Repository**: https://github.com/hftm-in2023/angular-blog-mehmet-oezdag 
+- **Repository**: https://github.com/hftm-in2023/angular-blog-mehmet-oezdag

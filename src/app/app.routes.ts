@@ -18,8 +18,7 @@ export const routes: Routes = [
   },
   {
     path: 'add-blog',
-    loadChildren: () =>
-      import('./features/add-blog/add-blog.module').then((m) => m.AddBlogModule),
+    loadChildren: () => import('./features/add-blog/add-blog.module').then((m) => m.AddBlogModule),
   },
   {
     path: '**',

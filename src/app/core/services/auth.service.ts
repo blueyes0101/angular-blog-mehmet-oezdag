@@ -47,13 +47,13 @@ export class AuthService {
     // Simulate API call
     return of(this.mockLogin(credentials)).pipe(
       delay(1000),
-      tap(user => {
+      tap((user) => {
         if (user) {
           this.setUser(user);
           this.setToken(this.generateMockToken());
           this.saveSession();
         }
-      })
+      }),
     );
   }
 
@@ -71,11 +71,11 @@ export class AuthService {
 
     return of(newUser).pipe(
       delay(1000),
-      tap(user => {
+      tap((user) => {
         this.setUser(user);
         this.setToken(this.generateMockToken());
         this.saveSession();
-      })
+      }),
     );
   }
 
@@ -124,10 +124,10 @@ export class AuthService {
     const updatedUser = { ...currentUser, ...updates };
     return of(updatedUser).pipe(
       delay(500),
-      tap(user => {
+      tap((user) => {
         this.setUser(user);
         this.saveSession();
-      })
+      }),
     );
   }
 

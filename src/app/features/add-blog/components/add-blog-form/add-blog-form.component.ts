@@ -36,7 +36,7 @@ export class AddBlogFormComponent {
 
   // Output signals
   submitBlog = output<Partial<BlogPost>>();
-  cancel = output<void>();
+  cancelForm = output<void>();
 
   // Form state signals
   title = signal('');
@@ -68,7 +68,7 @@ export class AddBlogFormComponent {
   addTag(): void {
     const tag = this.newTag().trim();
     if (tag && !this.tags().includes(tag)) {
-      this.tags.update(tags => [...tags, tag]);
+      this.tags.update((tags) => [...tags, tag]);
       this.newTag.set('');
     }
   }
@@ -77,7 +77,7 @@ export class AddBlogFormComponent {
    * Removes a tag
    */
   removeTag(tag: string): void {
-    this.tags.update(tags => tags.filter(t => t !== tag));
+    this.tags.update((tags) => tags.filter((t) => t !== tag));
   }
 
   /**
@@ -115,6 +115,6 @@ export class AddBlogFormComponent {
    * Handles cancel action
    */
   onCancel(): void {
-    this.cancel.emit();
+    this.cancelForm.emit();
   }
 }

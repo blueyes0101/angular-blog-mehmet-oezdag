@@ -14,7 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class FooterComponent {
   readonly currentYear = new Date().getFullYear();
-  
+
   readonly socialLinks = [
     { icon: 'link', url: 'https://github.com', label: 'GitHub' },
     { icon: 'work', url: 'https://linkedin.com', label: 'LinkedIn' },

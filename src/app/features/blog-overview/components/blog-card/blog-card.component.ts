@@ -29,7 +29,7 @@ export class BlogCardComponent {
   isFirst = input<boolean>(false);
   isLast = input<boolean>(false);
   isEven = input<boolean>(false);
-  
+
   // Output signals
   likeBlog = output<{ id: number; likedByMe: boolean }>();
 
@@ -41,7 +41,7 @@ export class BlogCardComponent {
   onReadMore(): void {
     this.router.navigate(['/blog-detail', this.post().id]);
   }
-  
+
   /**
    * Handle like button click
    */

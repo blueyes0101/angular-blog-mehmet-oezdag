@@ -25,7 +25,7 @@ export class BlogListComponent {
   posts = input<BlogPost[]>([]);
   isLoading = input<boolean>(false);
   hasFilters = input<boolean>(false);
-  
+
   // Output signals
   likeBlog = output<{ id: number; likedByMe: boolean }>();
 

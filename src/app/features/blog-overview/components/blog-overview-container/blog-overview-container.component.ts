@@ -20,7 +20,7 @@ export class BlogOverviewContainerComponent implements OnInit {
   // Inject services
   private readonly blogService = inject(BlogService);
   private readonly blogState = inject(BlogStateStore);
-  
+
   // State signals
   readonly posts = this.blogState.filteredPosts;
   readonly categories = this.blogState.categories;
@@ -28,8 +28,6 @@ export class BlogOverviewContainerComponent implements OnInit {
   readonly showOnlyFeatured = this.blogState.showOnlyFeatured;
   readonly isLoading = this.blogState.isLoading;
   readonly error = this.blogState.error;
-
-  constructor() {}
 
   ngOnInit(): void {
     // Load initial data
@@ -41,24 +39,21 @@ export class BlogOverviewContainerComponent implements OnInit {
    */
   private loadBlogData(): void {
     this.blogState.setLoading(true);
-    
+
     // Load posts and categories
-    combineLatest([
-      this.blogService.getPosts(),
-      this.blogService.getCategories()
-    ]).pipe(
-      finalize(() => this.blogState.setLoading(false))
-    ).subscribe({
-      next: ([posts, categories]) => {
-        this.blogState.setPosts(posts);
-        this.blogState.setCategories(categories);
-        this.blogState.clearError();
-      },
-      error: (error) => {
-        console.error('Error loading blog data:', error);
-        this.blogState.setError('Fehler beim Laden der Blog-Daten');
-      }
-    });
+    combineLatest([this.blogService.getPosts(), this.blogService.getCategories()])
+      .pipe(finalize(() => this.blogState.setLoading(false)))
+      .subscribe({
+        next: ([posts, categories]) => {
+          this.blogState.setPosts(posts);
+          this.blogState.setCategories(categories);
+          this.blogState.clearError();
+        },
+        error: (error) => {
+          console.error('Error loading blog data:', error);
+          this.blogState.setError('Fehler beim Laden der Blog-Daten');
+        },
+      });
   }
 
   /**
@@ -88,7 +83,7 @@ export class BlogOverviewContainerComponent implements OnInit {
   onRefresh(): void {
     this.loadBlogData();
   }
-  
+
   /**
    * Handles like event from blog card
    */

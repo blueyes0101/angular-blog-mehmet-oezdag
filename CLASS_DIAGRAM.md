@@ -5,17 +5,20 @@
 Das folgende Klassendiagramm zeigt die vollständige Architektur der Angular Blog-Anwendung mit allen implementierten Features, Services und State Management Komponenten.
 
 ### Features:
+
 - **BlogOverview**: Übersichtsseite mit Filterung und Like-Funktionalität
 - **BlogDetail**: Detailansicht einzelner Blog-Posts
 - **AddBlog**: Formular zum Erstellen neuer Blog-Posts
 
 ### Core Module:
+
 - **Layout**: Header, Footer, Sidebar Komponenten
 - **Static**: Error und NotFound Komponenten
 - **Services**: BlogService und AuthService
 - **State**: BlogStateStore und RouterStateStore für zentrales State Management
 
 ### Besonderheiten:
+
 - Alle Komponenten verwenden Input/Output Signals statt Decorators
 - OnPush Change Detection Strategy für optimale Performance
 - Redux-ähnliches State Management mit Angular Signals
@@ -31,13 +34,13 @@ classDiagram
         +navigationItems Array
         +ChangeDetectionStrategy OnPush
     }
-    
+
     class FooterComponent {
         +currentYear number
         +socialLinks Array
         +ChangeDetectionStrategy OnPush
     }
-    
+
     class SidebarComponent {
         +input isOpen boolean
         +output closeSidebar
@@ -46,11 +49,11 @@ classDiagram
         +onNavigate() void
         +ChangeDetectionStrategy OnPush
     }
-    
+
     class NotFoundComponent {
         +ChangeDetectionStrategy OnPush
     }
-    
+
     class ErrorComponent {
         +input errorCode number
         +input errorMessage string
@@ -58,7 +61,7 @@ classDiagram
         +reloadPage() void
         +ChangeDetectionStrategy OnPush
     }
-    
+
     %% Services
     class BlogService {
         -apiUrl string
@@ -69,7 +72,7 @@ classDiagram
         +getFeaturedPosts() Observable
         +getPostsByCategory(category) Observable
     }
-    
+
     class AuthService {
         -currentUser signal
         -authToken signal
@@ -85,7 +88,7 @@ classDiagram
         +hasRole(role) boolean
         +updateProfile(updates) Observable
     }
-    
+
     %% State Management
     class BlogStateStore {
         -state signal
@@ -108,7 +111,7 @@ classDiagram
         +resetFilters() void
         +clearError() void
     }
-    
+
     class RouterStateStore {
         -state signal
         +isLoading computed
@@ -117,7 +120,7 @@ classDiagram
         -setCurrentUrl(url) void
         -initializeRouterEvents() void
     }
-    
+
     %% Feature: Blog Overview
     class BlogOverviewContainerComponent {
         -blogService BlogService
@@ -137,7 +140,7 @@ classDiagram
         +onLikeBlog(event) void
         +ChangeDetectionStrategy OnPush
     }
-    
+
     class BlogListComponent {
         +input posts BlogPost[]
         +input isLoading boolean
@@ -146,7 +149,7 @@ classDiagram
         +trackByPost(index, post) number
         +ChangeDetectionStrategy OnPush
     }
-    
+
     class BlogCardComponent {
         +input post BlogPost
         +input index number
@@ -161,7 +164,7 @@ classDiagram
         +getCategoryColor(category) string
         +ChangeDetectionStrategy OnPush
     }
-    
+
     class BlogFilterComponent {
         +input categories string[]
         +input selectedCategory string
@@ -173,7 +176,7 @@ classDiagram
         +output refreshRequested EventEmitter
         +ChangeDetectionStrategy OnPush
     }
-    
+
     %% Feature: Blog Detail
     class BlogDetailContainerComponent {
         +input id number
@@ -187,7 +190,7 @@ classDiagram
         +onLike(liked) void
         +ChangeDetectionStrategy OnPush
     }
-    
+
     class BlogDetailViewComponent {
         +input post BlogPost
         +input isLoading boolean
@@ -195,7 +198,7 @@ classDiagram
         +formatDate(date) string
         +ChangeDetectionStrategy OnPush
     }
-    
+
     %% Feature: Add Blog
     class AddBlogContainerComponent {
         -blogService BlogService
@@ -207,7 +210,7 @@ classDiagram
         +onCancel() void
         +ChangeDetectionStrategy OnPush
     }
-    
+
     class AddBlogFormComponent {
         +input isSaving boolean
         +output submitBlog EventEmitter
@@ -228,7 +231,7 @@ classDiagram
         +onCancel() void
         +ChangeDetectionStrategy OnPush
     }
-    
+
     %% App Component
     class AppComponent {
         +routerState RouterStateStore
@@ -238,33 +241,33 @@ classDiagram
         +toggleDarkMode() void
         +ngOnInit() void
     }
-    
+
     %% Dependencies
     AppComponent --> RouterStateStore : injects
     AppComponent --> HeaderComponent : uses
     AppComponent --> FooterComponent : uses
     AppComponent --> SidebarComponent : uses
-    
+
     BlogOverviewContainerComponent --> BlogService : injects
     BlogOverviewContainerComponent --> BlogStateStore : injects
     BlogOverviewContainerComponent --> BlogListComponent : uses
     BlogOverviewContainerComponent --> BlogFilterComponent : uses
-    
+
     BlogListComponent --> BlogCardComponent : uses
-    
+
     BlogDetailContainerComponent --> BlogService : injects
     BlogDetailContainerComponent --> BlogStateStore : injects
     BlogDetailContainerComponent --> BlogDetailViewComponent : uses
-    
+
     AddBlogContainerComponent --> BlogService : injects
     AddBlogContainerComponent --> BlogStateStore : injects
     AddBlogContainerComponent --> AddBlogFormComponent : uses
-    
+
     BlogStateStore --> BlogService : uses data from
     RouterStateStore --> Router : listens to
-    
+
     AuthService --> Router : uses
-    
+
     %% Module Structure
     class CoreModule {
         <<module>>
@@ -278,7 +281,7 @@ classDiagram
         BlogStateStore
         RouterStateStore
     }
-    
+
     class BlogOverviewModule {
         <<module>>
         BlogOverviewContainerComponent
@@ -286,13 +289,13 @@ classDiagram
         BlogCardComponent
         BlogFilterComponent
     }
-    
+
     class BlogDetailModule {
         <<module>>
         BlogDetailContainerComponent
         BlogDetailViewComponent
     }
-    
+
     class AddBlogModule {
         <<module>>
         AddBlogContainerComponent
@@ -303,6 +306,7 @@ classDiagram
 ## Hinweis für PDF-Erstellung
 
 Um dieses Diagramm als PDF zu exportieren:
+
 1. Öffnen Sie diese Datei in einem Markdown-Editor mit Mermaid-Unterstützung (z.B. VS Code mit Mermaid-Extension)
 2. Nutzen Sie die Export-Funktion des Editors
 3. Oder verwenden Sie Online-Tools wie:

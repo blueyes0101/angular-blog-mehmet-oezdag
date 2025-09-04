@@ -6,11 +6,13 @@ const app = express();
 const PORT = 3000;
 
 // CORS-Konfiguration für Angular Frontend
-app.use(cors({
-  origin: ['http://localhost:4200', 'https://witty-hill-01df38b03.6.azurestaticapps.net'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(
+  cors({
+    origin: ['http://localhost:4200', 'https://witty-hill-01df38b03.6.azurestaticapps.net'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }),
+);
 
 app.use(express.json());
 
@@ -24,22 +26,22 @@ const swaggerOptions = {
       description: 'REST API für Angular Blog - Mehmet Oezdag',
       contact: {
         name: 'Mehmet Oezdag',
-        email: 'mehmet.oezdag@hftm.ch'
+        email: 'mehmet.oezdag@hftm.ch',
       },
       license: {
         name: 'MIT',
-        url: 'https://opensource.org/licenses/MIT'
-      }
+        url: 'https://opensource.org/licenses/MIT',
+      },
     },
     servers: [
       {
         url: 'http://localhost:3000',
-        description: 'Development Server'
+        description: 'Development Server',
       },
       {
         url: 'https://your-production-url.com',
-        description: 'Production Server'
-      }
+        description: 'Production Server',
+      },
     ],
     components: {
       schemas: {
@@ -50,54 +52,54 @@ const swaggerOptions = {
             id: {
               type: 'integer',
               description: 'Eindeutige Post-ID',
-              example: 1
+              example: 1,
             },
             title: {
               type: 'string',
               description: 'Titel des Blog-Posts',
-              example: 'Angular Control Flow - Die Revolution der Templates'
+              example: 'Angular Control Flow - Die Revolution der Templates',
             },
             content: {
               type: 'string',
               description: 'Vollständiger Inhalt des Posts',
-              example: 'Angular 17 führt eine neue Control Flow Syntax ein...'
+              example: 'Angular 17 führt eine neue Control Flow Syntax ein...',
             },
             author: {
               type: 'string',
               description: 'Autor des Posts',
-              example: 'Mehmet Oezdag'
+              example: 'Mehmet Oezdag',
             },
             publishDate: {
               type: 'string',
               format: 'date',
               description: 'Veröffentlichungsdatum (YYYY-MM-DD)',
-              example: '2024-01-15'
+              example: '2024-01-15',
             },
             category: {
               type: 'string',
               description: 'Kategorie des Posts',
-              example: 'Angular'
+              example: 'Angular',
             },
             tags: {
               type: 'array',
               items: {
-                type: 'string'
+                type: 'string',
               },
               description: 'Tags für den Post',
-              example: ['Angular', 'Control Flow', 'Templates']
+              example: ['Angular', 'Control Flow', 'Templates'],
             },
             featured: {
               type: 'boolean',
               description: 'Ob der Post als Featured markiert ist',
-              example: true
+              example: true,
             },
             imageUrl: {
               type: 'string',
               format: 'uri',
               description: 'URL des Titelbilds',
-              example: 'https://picsum.photos/400/250?random=1'
-            }
-          }
+              example: 'https://picsum.photos/400/250?random=1',
+            },
+          },
         },
         Error: {
           type: 'object',
@@ -105,12 +107,12 @@ const swaggerOptions = {
             error: {
               type: 'string',
               description: 'Fehlermeldung',
-              example: 'Post not found'
-            }
-          }
-        }
-      }
-    }
+              example: 'Post not found',
+            },
+          },
+        },
+      },
+    },
   },
   apis: ['./server.js'], // Pfad zu den API-Dateien
 };
@@ -118,11 +120,15 @@ const swaggerOptions = {
 const specs = swaggerJsdoc(swaggerOptions);
 
 // Swagger-UI Route
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
-  explorer: true,
-  customCss: '.swagger-ui .topbar { display: none }',
-  customSiteTitle: 'Angular Blog API Documentation'
-}));
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(specs, {
+    explorer: true,
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Angular Blog API Documentation',
+  }),
+);
 
 // Root-Route mit API-Info
 app.get('/', (req, res) => {
@@ -132,8 +138,8 @@ app.get('/', (req, res) => {
     documentation: `http://localhost:${PORT}/api-docs`,
     endpoints: {
       posts: `http://localhost:${PORT}/api/posts`,
-      categories: `http://localhost:${PORT}/api/categories`
-    }
+      categories: `http://localhost:${PORT}/api/categories`,
+    },
   });
 });
 
@@ -142,58 +148,63 @@ const blogPosts = [
   {
     id: 1,
     title: 'Angular Control Flow - Die Revolution der Templates',
-    content: 'Angular 17 führt eine neue Control Flow Syntax ein, die Templates lesbarer und performanter macht. Mit @if, @for und @switch wird die Template-Syntax deutlich vereinfacht.',
+    content:
+      'Angular 17 führt eine neue Control Flow Syntax ein, die Templates lesbarer und performanter macht. Mit @if, @for und @switch wird die Template-Syntax deutlich vereinfacht.',
     author: 'Mehmet Oezdag',
     publishDate: '2024-01-15',
     category: 'Angular',
     tags: ['Angular', 'Control Flow', 'Templates'],
     featured: true,
-    imageUrl: 'https://picsum.photos/400/250?random=1'
+    imageUrl: 'https://picsum.photos/400/250?random=1',
   },
   {
     id: 2,
     title: 'SCSS Best Practices für moderne Web-Entwicklung',
-    content: 'SCSS bietet mächtige Features für die Stylesheet-Entwicklung. Von Variablen über Mixins bis hin zu verschachtelten Regeln - hier sind die wichtigsten Best Practices.',
+    content:
+      'SCSS bietet mächtige Features für die Stylesheet-Entwicklung. Von Variablen über Mixins bis hin zu verschachtelten Regeln - hier sind die wichtigsten Best Practices.',
     author: 'Mehmet Oezdag',
     publishDate: '2024-01-10',
     category: 'CSS',
     tags: ['SCSS', 'CSS', 'Styling'],
     featured: false,
-    imageUrl: 'https://picsum.photos/400/250?random=2'
+    imageUrl: 'https://picsum.photos/400/250?random=2',
   },
   {
     id: 3,
     title: 'Flexbox Layout Patterns für responsive Design',
-    content: 'Flexbox ist ein mächtiges Layout-Tool für moderne Webseiten. Diese Anleitung zeigt praktische Patterns für responsive und flexible Layouts.',
+    content:
+      'Flexbox ist ein mächtiges Layout-Tool für moderne Webseiten. Diese Anleitung zeigt praktische Patterns für responsive und flexible Layouts.',
     author: 'Mehmet Oezdag',
     publishDate: '2024-01-05',
     category: 'CSS',
     tags: ['Flexbox', 'Responsive', 'Layout'],
     featured: true,
-    imageUrl: 'https://picsum.photos/400/250?random=3'
+    imageUrl: 'https://picsum.photos/400/250?random=3',
   },
   {
     id: 4,
     title: 'TypeScript Tipps für Angular Entwickler',
-    content: 'TypeScript macht Angular-Entwicklung sicherer und produktiver. Hier sind fortgeschrittene TypeScript-Techniken speziell für Angular-Projekte.',
+    content:
+      'TypeScript macht Angular-Entwicklung sicherer und produktiver. Hier sind fortgeschrittene TypeScript-Techniken speziell für Angular-Projekte.',
     author: 'Mehmet Oezdag',
     publishDate: '2023-12-28',
     category: 'TypeScript',
     tags: ['TypeScript', 'Angular', 'Development'],
     featured: false,
-    imageUrl: 'https://picsum.photos/400/250?random=4'
+    imageUrl: 'https://picsum.photos/400/250?random=4',
   },
   {
     id: 5,
     title: 'Angular Material - UI Components richtig einsetzen',
-    content: 'Angular Material bietet eine umfangreiche Komponentenbibliothek. Diese Anleitung zeigt, wie Sie Material Design effektiv in Ihren Angular-Apps nutzen.',
+    content:
+      'Angular Material bietet eine umfangreiche Komponentenbibliothek. Diese Anleitung zeigt, wie Sie Material Design effektiv in Ihren Angular-Apps nutzen.',
     author: 'Mehmet Oezdag',
     publishDate: '2023-12-20',
     category: 'Angular',
     tags: ['Angular Material', 'UI', 'Components'],
     featured: false,
-    imageUrl: 'https://picsum.photos/400/250?random=5'
-  }
+    imageUrl: 'https://picsum.photos/400/250?random=5',
+  },
 ];
 
 /**
@@ -230,21 +241,19 @@ const blogPosts = [
  */
 app.get('/api/posts', (req, res) => {
   const { category, featured } = req.query;
-  
+
   let filteredPosts = blogPosts;
-  
+
   if (category) {
-    filteredPosts = filteredPosts.filter(post => 
-      post.category.toLowerCase() === category.toLowerCase()
+    filteredPosts = filteredPosts.filter(
+      (post) => post.category.toLowerCase() === category.toLowerCase(),
     );
   }
-  
+
   if (featured !== undefined) {
-    filteredPosts = filteredPosts.filter(post => 
-      post.featured === (featured === 'true')
-    );
+    filteredPosts = filteredPosts.filter((post) => post.featured === (featured === 'true'));
   }
-  
+
   res.json(filteredPosts);
 });
 
@@ -278,7 +287,7 @@ app.get('/api/posts', (req, res) => {
  *               $ref: '#/components/schemas/Error'
  */
 app.get('/api/posts/:id', (req, res) => {
-  const post = blogPosts.find(p => p.id === parseInt(req.params.id));
+  const post = blogPosts.find((p) => p.id === parseInt(req.params.id));
   if (!post) {
     return res.status(404).json({ error: 'Post not found' });
   }
@@ -342,17 +351,17 @@ app.get('/api/posts/:id', (req, res) => {
  */
 app.post('/api/posts', (req, res) => {
   const { title, content, author, category, tags, featured } = req.body;
-  
+
   // Validierung der Pflichtfelder
   if (!title || !content || !author || !category) {
-    return res.status(400).json({ 
-      error: 'Pflichtfelder fehlen: title, content, author, category sind erforderlich' 
+    return res.status(400).json({
+      error: 'Pflichtfelder fehlen: title, content, author, category sind erforderlich',
     });
   }
-  
+
   // Neue Post-ID generieren
-  const newId = Math.max(...blogPosts.map(p => p.id)) + 1;
-  
+  const newId = Math.max(...blogPosts.map((p) => p.id)) + 1;
+
   // Neuen Post erstellen
   const newPost = {
     id: newId,
@@ -363,12 +372,12 @@ app.post('/api/posts', (req, res) => {
     category,
     tags: tags || [],
     featured: featured || false,
-    imageUrl: `https://picsum.photos/400/250?random=${newId}`
+    imageUrl: `https://picsum.photos/400/250?random=${newId}`,
   };
-  
+
   // Post zum Array hinzufügen
   blogPosts.push(newPost);
-  
+
   // Erstellten Post zurückgeben
   res.status(201).json(newPost);
 });
@@ -392,7 +401,7 @@ app.post('/api/posts', (req, res) => {
  *               example: ["Angular", "CSS", "TypeScript"]
  */
 app.get('/api/categories', (req, res) => {
-  const categories = [...new Set(blogPosts.map(post => post.category))];
+  const categories = [...new Set(blogPosts.map((post) => post.category))];
   res.json(categories);
 });
 
@@ -404,4 +413,4 @@ app.listen(PORT, () => {
   console.log(`   - GET /api/posts/:id - Einzelner Post`);
   console.log(`   - GET /api/categories - Verfügbare Kategorien`);
   console.log(`📝 API-Dokumentation: http://localhost:${PORT}/api-docs`);
-}); 
+});

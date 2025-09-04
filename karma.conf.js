@@ -6,10 +6,10 @@ module.exports = function (config) {
   const fs = require('fs');
   const chromeBinaryPaths = [
     '/usr/bin/google-chrome',
-    '/usr/bin/google-chrome-stable', 
+    '/usr/bin/google-chrome-stable',
     '/usr/bin/chromium',
     '/usr/bin/chromium-browser',
-    '/snap/bin/chromium'
+    '/snap/bin/chromium',
   ];
 
   // Set Chrome binary path for CI environments if not already set
@@ -21,7 +21,7 @@ module.exports = function (config) {
         break;
       }
     }
-    
+
     // Fallback for GitHub Actions and other CI environments
     if (!process.env.CHROME_BIN) {
       process.env.CHROME_BIN = 'google-chrome';
@@ -30,7 +30,7 @@ module.exports = function (config) {
   } else {
     console.log(`Karma: Using preset Chrome binary: ${process.env.CHROME_BIN}`);
   }
-  
+
   config.set({
     basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
@@ -39,7 +39,7 @@ module.exports = function (config) {
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage'),
-      require('@angular-devkit/build-angular/plugins/karma')
+      require('@angular-devkit/build-angular/plugins/karma'),
     ],
     client: {
       jasmine: {
@@ -48,18 +48,15 @@ module.exports = function (config) {
         // for example, you can disable the random execution with `random: false`
         // or set a specific seed with `seed: 4321`
       },
-      clearContext: false // leave Jasmine Spec Runner output visible in browser
+      clearContext: false, // leave Jasmine Spec Runner output visible in browser
     },
     jasmineHtmlReporter: {
-      suppressAll: true // removes the duplicated traces
+      suppressAll: true, // removes the duplicated traces
     },
     coverageReporter: {
       dir: require('path').join(__dirname, './coverage/angu-blog-mehmet-oezdag'),
       subdir: '.',
-      reporters: [
-        { type: 'html' },
-        { type: 'text-summary' }
-      ]
+      reporters: [{ type: 'html' }, { type: 'text-summary' }],
     },
     reporters: ['progress', 'kjhtml'],
     browsers: ['Chrome'],
@@ -75,9 +72,9 @@ module.exports = function (config) {
           '--disable-background-timer-throttling',
           '--disable-backgrounding-occluded-windows',
           '--disable-renderer-backgrounding',
-          '--headless'
-        ]
-      }
+          '--headless',
+        ],
+      },
     },
     restartOnFileChange: true,
     // Ensure browser process doesn't hang in CI
@@ -85,6 +82,6 @@ module.exports = function (config) {
     browserDisconnectTolerance: 3,
     browserNoActivityTimeout: 60000,
     captureTimeout: 60000,
-    singleRun: false
+    singleRun: false,
   });
-}; 
+};
