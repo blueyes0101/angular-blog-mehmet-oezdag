@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { isAuthenticatedGuard } from './core/guards/is-authenticated.guard';
 
 export const routes: Routes = [
   {
@@ -20,6 +21,20 @@ export const routes: Routes = [
     path: 'add-blog',
     loadChildren: () =>
       import('./features/add-blog/add-blog.module').then((m) => m.AddBlogModule),
+    canActivate: [isAuthenticatedGuard],
+    data: { role: 'user' }
+  },
+  {
+    path: 'add-blog-page',
+    loadChildren: () =>
+      import('./features/add-blog-page/add-blog-page.module').then((m) => m.AddBlogPageModule),
+    canActivate: [isAuthenticatedGuard],
+    data: { role: 'user' }
+  },
+  {
+    path: 'unauthorized',
+    loadComponent: () =>
+      import('./core/static/unauthorized/unauthorized.component').then((c) => c.UnauthorizedComponent),
   },
   {
     path: '**',

@@ -1,0 +1,57 @@
+.add-blog-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+mat-card {
+  margin-bottom: 2rem;
+}
+
+mat-card-header {
+  margin-bottom: 1.5rem;
+}
+
+mat-card-subtitle {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .add-blog-container {
+    padding: 0 0.5rem;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    
+    button {
+      width: 100%;
+    }
+  }
+}

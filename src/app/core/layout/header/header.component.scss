@@ -47,6 +47,35 @@
   .user-menu {
     margin-left: 0.5rem;
   }
+
+  .username {
+    margin: 0 0.5rem;
+    font-size: 14px;
+    opacity: 0.9;
+    display: none;
+
+    @media (min-width: 768px) {
+      display: inline;
+    }
+  }
+}
+
+.user-info {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: rgba(0, 0, 0, 0.04);
+
+  mat-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+  }
+
+  span {
+    font-weight: 500;
+  }
 }
 
 // Responsive
