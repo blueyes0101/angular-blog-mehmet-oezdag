@@ -10,9 +10,11 @@
 
   <nav class="desktop-nav">
     @for (item of navigationItems; track item.route) {
-      <a mat-button [routerLink]="item.route" routerLinkActive="active">
-        {{ item.label }}
-      </a>
+      @if (shouldShowNavItem(item) | async) {
+        <a mat-button [routerLink]="item.route" routerLinkActive="active">
+          {{ item.label }}
+        </a>
+      }
     }
   </nav>
 
@@ -22,23 +24,35 @@
     <mat-icon>dark_mode</mat-icon>
   </button>
 
-  <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-menu">
-    <mat-icon>account_circle</mat-icon>
-  </button>
+  @if (isAuthenticated$ | async) {
+    <span class="username">{{ username$ | async }}</span>
+    <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-menu">
+      <mat-icon>account_circle</mat-icon>
+    </button>
 
-  <mat-menu #userMenu="matMenu">
-    <button mat-menu-item routerLink="/profile">
-      <mat-icon>person</mat-icon>
-      <span>Profil</span>
+    <mat-menu #userMenu="matMenu">
+      <div class="user-info">
+        <mat-icon>account_circle</mat-icon>
+        <span>{{ username$ | async }}</span>
+      </div>
+      <mat-divider></mat-divider>
+      <button mat-menu-item routerLink="/profile">
+        <mat-icon>person</mat-icon>
+        <span>Profil</span>
+      </button>
+      <button mat-menu-item routerLink="/settings">
+        <mat-icon>settings</mat-icon>
+        <span>Einstellungen</span>
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Abmelden</span>
+      </button>
+    </mat-menu>
+  } @else {
+    <button mat-raised-button color="accent" (click)="login()">
+      Login
     </button>
-    <button mat-menu-item routerLink="/settings">
-      <mat-icon>settings</mat-icon>
-      <span>Einstellungen</span>
-    </button>
-    <mat-divider></mat-divider>
-    <button mat-menu-item>
-      <mat-icon>logout</mat-icon>
-      <span>Abmelden</span>
-    </button>
-  </mat-menu>
+  }
 </mat-toolbar>
