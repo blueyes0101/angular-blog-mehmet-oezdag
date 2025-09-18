@@ -1,16 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { BlogService } from '../../../../core/services/blog.service';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
+// import { OidcSecurityService } from 'angular-auth-oidc-client'; // Temporarily disabled
+import { MockOidcSecurityService } from '../../../../core/services/mock-oidc.service';
+import { AddBlogFormComponent, BlogFormData } from '../add-blog-form/add-blog-form.component';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-add-blog-page',
@@ -19,73 +18,87 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
     MatSnackBarModule,
     MatIconModule,
+    AddBlogFormComponent,
   ],
 })
-export class AddBlogPageComponent implements OnInit {
-  blogForm!: FormGroup;
-  isSubmitting = false;
+export class AddBlogPageComponent implements OnInit, OnDestroy {
+  isLoading = false;
+  showSuccessMessage = false;
   userData$: any;
+  private destroy$ = new Subject<void>();
 
   constructor(
-    private fb: FormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
     private blogService: BlogService,
-    private oidcSecurityService: OidcSecurityService,
+    private oidcSecurityService: MockOidcSecurityService,
   ) {}
 
   ngOnInit(): void {
-    this.initializeForm();
     this.userData$ = this.oidcSecurityService.userData$;
   }
 
-  private initializeForm(): void {
-    this.blogForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      content: ['', [Validators.required, Validators.minLength(10)]],
-      summary: ['', [Validators.required, Validators.maxLength(200)]],
-      category: ['', Validators.required],
-      tags: [''],
-    });
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  onSubmit(): void {
-    if (this.blogForm.valid && !this.isSubmitting) {
-      this.isSubmitting = true;
+  onFormSubmit(formData: BlogFormData): void {
+    if (this.isLoading) return;
 
-      const blogData = {
-        ...this.blogForm.value,
-        tags: this.blogForm.value.tags
-          ? this.blogForm.value.tags.split(',').map((tag: string) => tag.trim())
-          : [],
-      };
+    this.isLoading = true;
+    this.showSuccessMessage = false;
 
-      this.blogService.createBlog(blogData).subscribe({
-        next: (_response: any) => {
+    const blogData = {
+      title: formData.title,
+      content: formData.content,
+      author: 'Anonymous', // This could be enhanced to get from user data
+      publishDate: new Date().toISOString().split('T')[0],
+      category: 'General',
+      tags: [],
+      featured: false,
+      imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=400&fit=crop',
+      likedByMe: false,
+      likes: 0,
+    };
+
+    this.blogService.createBlog(blogData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          this.showSuccessMessage = true;
+          
+          // Show success toast
           this.snackBar.open('Blog post created successfully!', 'Close', {
             duration: 3000,
             horizontalPosition: 'right',
             verticalPosition: 'top',
           });
-          this.router.navigate(['/blog']);
+
+          // Navigate back to blog overview after a short delay
+          setTimeout(() => {
+            this.router.navigate(['/blog']);
+          }, 2000);
         },
-        error: (_error: any) => {
-          this.isSubmitting = false;
+        error: (error) => {
+          this.isLoading = false;
+          console.error('Error creating blog post:', error);
+          
           this.snackBar.open('Error creating blog post. Please try again.', 'Close', {
-            duration: 3000,
+            duration: 5000,
             horizontalPosition: 'right',
             verticalPosition: 'top',
           });
         },
       });
-    }
+  }
+
+  onFormReset(): void {
+    this.showSuccessMessage = false;
   }
 
   onCancel(): void {

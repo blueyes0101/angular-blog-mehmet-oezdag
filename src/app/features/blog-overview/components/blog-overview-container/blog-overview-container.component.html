@@ -1,12 +1,28 @@
 <div class="blog-overview-container">
   <div class="page-header">
-    <h1>
-      <mat-icon>article</mat-icon>
-      Blog Übersicht
-    </h1>
-    <p class="page-description">
-      Entdecken Sie unsere neuesten Artikel über Angular, TypeScript und moderne Webentwicklung.
-    </p>
+    <div class="header-content">
+      <div class="header-text">
+        <h1>
+          <mat-icon>article</mat-icon>
+          Blog Übersicht
+        </h1>
+        <p class="page-description">
+          Entdecken Sie unsere neuesten Artikel über Angular, TypeScript und moderne Webentwicklung.
+        </p>
+      </div>
+      <div class="header-actions">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          (click)="onAddBlog()"
+          matTooltip="Neuen Blog-Post erstellen"
+          class="add-blog-btn"
+        >
+          <mat-icon>add</mat-icon>
+          Neuer Post
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Filter Component -->

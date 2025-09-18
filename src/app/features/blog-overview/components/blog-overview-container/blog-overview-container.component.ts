@@ -1,8 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject, ChangeDetectorRef } from '@angular/core';
 import { combineLatest } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BlogService } from '../../../../core/services/blog.service';
 import { BlogStateStore } from '../../../../core/state/blog-state.store';
 import { BlogFilterComponent } from '../blog-filter/blog-filter.component';
@@ -14,12 +17,14 @@ import { BlogListComponent } from '../blog-list/blog-list.component';
   styleUrls: ['./blog-overview-container.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, MatIconModule, BlogFilterComponent, BlogListComponent],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule, BlogFilterComponent, BlogListComponent],
 })
 export class BlogOverviewContainerComponent implements OnInit {
   // Inject services
   private readonly blogService = inject(BlogService);
   private readonly blogState = inject(BlogStateStore);
+  private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   // State signals
   readonly posts = this.blogState.filteredPosts;
@@ -92,5 +97,22 @@ export class BlogOverviewContainerComponent implements OnInit {
   onLikeBlog(event: { id: number; likedByMe: boolean }): void {
     this.blogState.toggleLikePost(event.id, event.likedByMe);
     // In a real app, you would also make an API call here
+  }
+
+  /**
+   * Navigates to the add blog page
+   */
+  onAddBlog(): void {
+    console.log('Add Blog button clicked, navigating to /add-blog');
+    this.router.navigate(['/add-blog']).then(
+      (success) => {
+        console.log('Navigation successful:', success);
+        this.cdr.markForCheck();
+      },
+      (error) => {
+        console.error('Navigation failed:', error);
+        this.cdr.markForCheck();
+      }
+    );
   }
 }

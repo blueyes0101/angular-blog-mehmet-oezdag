@@ -237,7 +237,7 @@ export class BlogService {
       return of(newPost);
     }
 
-    return this.http.post<BlogPost>(`${this.apiUrl}/posts`, blogData).pipe(
+    return this.http.post<BlogPost>(`${this.apiUrl}/blogs`, blogData).pipe(
       map((response) => {
         const validationResult = safeParseBlogPost(response);
         if (!validationResult.success) {
@@ -250,6 +250,26 @@ export class BlogService {
         console.error('Error creating blog post:', error);
         return throwError(() => new Error(`Failed to create blog post: ${error.message}`));
       }),
+    );
+  }
+
+  /**
+   * Checks if a blog title already exists
+   */
+  titleExists(title: string): Observable<{ exists: boolean }> {
+    if (environment.mockData) {
+      const exists = this.mockPosts.some(post => 
+        post.title.toLowerCase().trim() === title.toLowerCase().trim()
+      );
+      return of({ exists });
+    }
+
+    const params = new HttpParams().set('title', title);
+    return this.http.get<{ exists: boolean }>(`${this.apiUrl}/blogs/title-exists`, { params }).pipe(
+      catchError((error) => {
+        console.error('Error checking title existence:', error);
+        return of({ exists: false });
+      })
     );
   }
 

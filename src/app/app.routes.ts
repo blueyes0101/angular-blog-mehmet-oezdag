@@ -19,16 +19,10 @@ export const routes: Routes = [
   },
   {
     path: 'add-blog',
-    loadChildren: () => import('./features/add-blog/add-blog.module').then((m) => m.AddBlogModule),
-    canActivate: [isAuthenticatedGuard],
-    data: { role: 'user' },
-  },
-  {
-    path: 'add-blog-page',
     loadChildren: () =>
       import('./features/add-blog-page/add-blog-page.module').then((m) => m.AddBlogPageModule),
-    canActivate: [isAuthenticatedGuard],
-    data: { role: 'user' },
+    // canActivate: [isAuthenticatedGuard], // Temporarily disabled for testing
+    // data: { role: 'user' },
   },
   {
     path: 'unauthorized',

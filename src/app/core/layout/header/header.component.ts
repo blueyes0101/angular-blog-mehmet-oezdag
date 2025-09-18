@@ -5,7 +5,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
+// import { OidcSecurityService } from 'angular-auth-oidc-client'; // Temporarily disabled
+import { MockOidcSecurityService } from '../../services/mock-oidc.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { hasRole } from '../../helpers/auth.helpers';
@@ -49,11 +50,10 @@ export class HeaderComponent {
   readonly navigationItems = [
     { label: 'Blog', route: '/blog', requiresAuth: false },
     { label: 'Neuer Post', route: '/add-blog', requiresAuth: true, requiresRole: 'user' },
-    { label: 'Add Blog Page', route: '/add-blog-page', requiresAuth: true, requiresRole: 'user' },
     { label: 'Kategorien', route: '/categories', requiresAuth: false },
   ];
 
-  constructor(private oidcSecurityService: OidcSecurityService) {}
+  constructor(private oidcSecurityService: MockOidcSecurityService) {}
 
   login(): void {
     this.oidcSecurityService.authorize();

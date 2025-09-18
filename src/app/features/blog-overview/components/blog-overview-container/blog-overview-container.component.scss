@@ -4,32 +4,69 @@
   padding: 2rem;
 
   .page-header {
-    text-align: center;
     margin-bottom: 3rem;
 
-    h1 {
+    .header-content {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      font-size: 2.5rem;
-      font-weight: 600;
-      color: #1976d2;
-      margin-bottom: 1rem;
+      justify-content: space-between;
+      gap: 2rem;
+      flex-wrap: wrap;
 
-      mat-icon {
-        font-size: 2.5rem;
-        width: 2.5rem;
-        height: 2.5rem;
+      .header-text {
+        flex: 1;
+        text-align: left;
+
+        h1 {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          font-size: 2.5rem;
+          font-weight: 600;
+          color: #1976d2;
+          margin-bottom: 1rem;
+
+          mat-icon {
+            font-size: 2.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+          }
+        }
+
+        .page-description {
+          font-size: 1.1rem;
+          color: #666;
+          max-width: 600px;
+          margin: 0;
+          line-height: 1.6;
+        }
       }
-    }
 
-    .page-description {
-      font-size: 1.1rem;
-      color: #666;
-      max-width: 600px;
-      margin: 0 auto;
-      line-height: 1.6;
+      .header-actions {
+        flex-shrink: 0;
+
+        .add-blog-btn {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-weight: 600;
+          padding: 0.75rem 1.5rem;
+          border-radius: 0.5rem;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          transition: all 0.2s ease-in-out;
+
+          &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+          }
+
+          mat-icon {
+            font-size: 1.25rem;
+            width: 1.25rem;
+            height: 1.25rem;
+          }
+        }
+      }
     }
   }
 
@@ -39,18 +76,40 @@
     .page-header {
       margin-bottom: 2rem;
 
-      h1 {
-        font-size: 2rem;
+      .header-content {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+        gap: 1.5rem;
 
-        mat-icon {
-          font-size: 2rem;
-          width: 2rem;
-          height: 2rem;
+        .header-text {
+          text-align: center;
+
+          h1 {
+            font-size: 2rem;
+            justify-content: center;
+
+            mat-icon {
+              font-size: 2rem;
+              width: 2rem;
+              height: 2rem;
+            }
+          }
+
+          .page-description {
+            font-size: 1rem;
+          }
         }
-      }
 
-      .page-description {
-        font-size: 1rem;
+        .header-actions {
+          display: flex;
+          justify-content: center;
+
+          .add-blog-btn {
+            width: 100%;
+            max-width: 200px;
+          }
+        }
       }
     }
   }
