@@ -4,7 +4,7 @@
       <mat-card-title>Create New Blog Post</mat-card-title>
       <mat-card-subtitle>
         @if (userData$ | async; as userData) {
-          <span>Author: {{ userData.preferred_username || userData.email }}</span>
+          <span>Author: Anonymous</span>
         }
       </mat-card-subtitle>
     </mat-card-header>
@@ -66,8 +66,10 @@
           </button>
           <button mat-raised-button color="primary" type="submit" [disabled]="!blogForm.valid || isSubmitting">
             @if (isSubmitting) {
-              <mat-icon class="spinning">refresh</mat-icon>
-              Creating...
+              <ng-container>
+                <mat-icon class="spinning">refresh</mat-icon>
+                Creating...
+              </ng-container>
             } @else {
               Create Post
             }

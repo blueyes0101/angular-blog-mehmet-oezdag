@@ -1,6 +1,7 @@
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 import { BlogService } from '../../../../core/services/blog.service';
 import { BlogStateStore } from '../../../../core/state/blog-state.store';
 import { BlogPost } from '../../../../core/schemas/blog.schemas';
@@ -12,7 +13,7 @@ import { AddBlogFormComponent } from '../add-blog-form/add-blog-form.component';
   styleUrls: ['./add-blog-container.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, AddBlogFormComponent],
+  imports: [CommonModule, MatIconModule, AddBlogFormComponent],
 })
 export class AddBlogContainerComponent {
   private readonly blogService = inject(BlogService);

@@ -122,11 +122,15 @@
           [disabled]="!isFormValid() || isSaving()"
         >
           @if (isSaving()) {
-            <mat-icon>sync</mat-icon>
-            Speichern...
+            <ng-container>
+              <mat-icon>sync</mat-icon>
+              Speichern...
+            </ng-container>
           } @else {
-            <mat-icon>save</mat-icon>
-            Blog-Post erstellen
+            <ng-container>
+              <mat-icon>save</mat-icon>
+              Blog-Post erstellen
+            </ng-container>
           }
         </button>
       </div>

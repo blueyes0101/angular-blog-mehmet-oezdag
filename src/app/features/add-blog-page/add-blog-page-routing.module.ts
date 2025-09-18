@@ -8,12 +8,12 @@ const routes: Routes = [
     path: '',
     component: AddBlogPageComponent,
     canActivate: [isAuthenticatedGuard],
-    data: { role: 'user' }
-  }
+    data: { role: 'user' },
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AddBlogPageRoutingModule { }
+export class AddBlogPageRoutingModule {}

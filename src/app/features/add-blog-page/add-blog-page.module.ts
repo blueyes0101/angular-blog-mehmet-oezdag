@@ -12,9 +12,7 @@ import { AddBlogPageRoutingModule } from './add-blog-page-routing.module';
 import { AddBlogPageComponent } from './components/add-blog-page/add-blog-page.component';
 
 @NgModule({
-  declarations: [
-    AddBlogPageComponent
-  ],
+  declarations: [],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -24,7 +22,8 @@ import { AddBlogPageComponent } from './components/add-blog-page/add-blog-page.c
     MatInputModule,
     MatButtonModule,
     MatSnackBarModule,
-    MatIconModule
-  ]
+    MatIconModule,
+    AddBlogPageComponent,
+  ],
 })
-export class AddBlogPageModule { }
+export class AddBlogPageModule {}

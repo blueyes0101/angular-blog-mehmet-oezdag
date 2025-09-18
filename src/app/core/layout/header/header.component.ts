@@ -32,17 +32,17 @@ export class HeaderComponent {
 
   // Authentication observables
   isAuthenticated$ = this.oidcSecurityService.isAuthenticated$.pipe(
-    map(({ isAuthenticated }) => isAuthenticated)
+    map(({ isAuthenticated }) => isAuthenticated),
   );
-  
+
   userData$ = this.oidcSecurityService.userData$;
-  
+
   hasUserRole$ = this.oidcSecurityService.userData$.pipe(
-    map(userData => hasRole(userData, 'user'))
+    map((userData) => hasRole(userData, 'user')),
   );
 
   username$ = this.oidcSecurityService.userData$.pipe(
-    map(userData => userData?.preferred_username || userData?.name || userData?.email || 'User')
+    map((userData) => userData?.preferred_username || userData?.name || userData?.email || 'User'),
   );
 
   // Navigation items for desktop
@@ -70,7 +70,7 @@ export class HeaderComponent {
 
     if (item.requiresRole) {
       return this.oidcSecurityService.userData$.pipe(
-        map(userData => hasRole(userData, item.requiresRole))
+        map((userData) => hasRole(userData, item.requiresRole)),
       );
     }
 

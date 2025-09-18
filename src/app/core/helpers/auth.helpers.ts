@@ -11,7 +11,7 @@ export function hasRole(userData: any, requiredRole: string): boolean {
 
   // Check different possible role claim locations
   // Keycloak typically puts roles in different places depending on configuration
-  
+
   // Check resource_access for client-specific roles
   if (userData.resource_access && userData.resource_access['angular-blog-client']) {
     const clientRoles = userData.resource_access['angular-blog-client'].roles || [];
