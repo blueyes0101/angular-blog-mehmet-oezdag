@@ -14,14 +14,12 @@ describe('blogTitleExistsValidator', () => {
 
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [
-        { provide: BlogService, useValue: blogServiceSpy }
-      ]
+      providers: [{ provide: BlogService, useValue: blogServiceSpy }],
     });
 
     blogService = TestBed.inject(BlogService) as jasmine.SpyObj<BlogService>;
     control = jasmine.createSpyObj('AbstractControl', ['valueChanges'], {
-      value: 'Test Title'
+      value: 'Test Title',
     });
   });
 
@@ -30,7 +28,7 @@ describe('blogTitleExistsValidator', () => {
     control.valueChanges = of('');
 
     const validator = blogTitleExistsValidator(blogService);
-    validator(control).subscribe(result => {
+    validator(control).subscribe((result) => {
       expect(result).toBeNull();
       done();
     });
@@ -41,7 +39,7 @@ describe('blogTitleExistsValidator', () => {
     control.valueChanges = of('Te');
 
     const validator = blogTitleExistsValidator(blogService);
-    validator(control).subscribe(result => {
+    validator(control).subscribe((result) => {
       expect(result).toBeNull();
       done();
     });
@@ -53,7 +51,7 @@ describe('blogTitleExistsValidator', () => {
     blogService.titleExists.and.returnValue(of({ exists: true }));
 
     const validator = blogTitleExistsValidator(blogService);
-    validator(control).subscribe(result => {
+    validator(control).subscribe((result) => {
       expect(result).toEqual({ titleExists: true });
       done();
     });
@@ -65,7 +63,7 @@ describe('blogTitleExistsValidator', () => {
     blogService.titleExists.and.returnValue(of({ exists: false }));
 
     const validator = blogTitleExistsValidator(blogService);
-    validator(control).subscribe(result => {
+    validator(control).subscribe((result) => {
       expect(result).toBeNull();
       done();
     });
@@ -77,7 +75,7 @@ describe('blogTitleExistsValidator', () => {
     blogService.titleExists.and.returnValue(throwError(() => new Error('API Error')));
 
     const validator = blogTitleExistsValidator(blogService);
-    validator(control).subscribe(result => {
+    validator(control).subscribe((result) => {
       expect(result).toBeNull();
       done();
     });
@@ -89,7 +87,7 @@ describe('blogTitleExistsValidator', () => {
     blogService.titleExists.and.returnValue(of({ exists: false }));
 
     const validator = blogTitleExistsValidator(blogService);
-    validator(control).subscribe(result => {
+    validator(control).subscribe((result) => {
       expect(result).toBeNull();
       done();
     });

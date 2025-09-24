@@ -14,9 +14,7 @@ describe('AddBlogFormComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [AddBlogFormComponent, ReactiveFormsModule],
-      providers: [
-        { provide: BlogService, useValue: blogServiceSpy }
-      ]
+      providers: [{ provide: BlogService, useValue: blogServiceSpy }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddBlogFormComponent);
@@ -80,14 +78,14 @@ describe('AddBlogFormComponent', () => {
 
     component.blogForm.patchValue({
       title: 'Valid Title',
-      content: 'Valid content with enough characters'
+      content: 'Valid content with enough characters',
     });
 
     component.onSubmit();
 
     expect(component.formSubmit.emit).toHaveBeenCalledWith({
       title: 'Valid Title',
-      content: 'Valid content with enough characters'
+      content: 'Valid content with enough characters',
     });
   });
 
@@ -96,7 +94,7 @@ describe('AddBlogFormComponent', () => {
 
     component.blogForm.patchValue({
       title: 'ab', // Too short
-      content: 'Valid content'
+      content: 'Valid content',
     });
 
     component.onSubmit();
@@ -163,10 +161,10 @@ describe('AddBlogFormComponent', () => {
 
   it('should check if form is valid', () => {
     blogService.titleExists.and.returnValue(of({ exists: false }));
-    
+
     component.blogForm.patchValue({
       title: 'Valid Title',
-      content: 'Valid content with enough characters'
+      content: 'Valid content with enough characters',
     });
 
     expect(component.isFormValid()).toBeTruthy();

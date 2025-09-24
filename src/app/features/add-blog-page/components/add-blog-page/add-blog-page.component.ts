@@ -16,13 +16,7 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './add-blog-page.component.html',
   styleUrls: ['./add-blog-page.component.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatSnackBarModule,
-    MatIconModule,
-    AddBlogFormComponent,
-  ],
+  imports: [CommonModule, MatCardModule, MatSnackBarModule, MatIconModule, AddBlogFormComponent],
 })
 export class AddBlogPageComponent implements OnInit, OnDestroy {
   isLoading = false;
@@ -65,13 +59,14 @@ export class AddBlogPageComponent implements OnInit, OnDestroy {
       likes: 0,
     };
 
-    this.blogService.createBlog(blogData)
+    this.blogService
+      .createBlog(blogData)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           this.isLoading = false;
           this.showSuccessMessage = true;
-          
+
           // Show success toast
           this.snackBar.open('Blog post created successfully!', 'Close', {
             duration: 3000,
@@ -87,7 +82,7 @@ export class AddBlogPageComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.isLoading = false;
           console.error('Error creating blog post:', error);
-          
+
           this.snackBar.open('Error creating blog post. Please try again.', 'Close', {
             duration: 5000,
             horizontalPosition: 'right',

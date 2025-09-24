@@ -1,11 +1,18 @@
 import { Injectable } from '@angular/core';
 import { AbstractControl, AsyncValidator, ValidationErrors } from '@angular/forms';
 import { Observable, of } from 'rxjs';
-import { map, catchError, debounceTime, distinctUntilChanged, switchMap, first } from 'rxjs/operators';
+import {
+  map,
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  switchMap,
+  first,
+} from 'rxjs/operators';
 import { BlogService } from '../services/blog.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BlogTitleExistsValidator implements AsyncValidator {
   constructor(private blogService: BlogService) {}
@@ -18,10 +25,10 @@ export class BlogTitleExistsValidator implements AsyncValidator {
     return control.valueChanges.pipe(
       debounceTime(400),
       distinctUntilChanged(),
-      switchMap(title => this.checkTitleExists(title)),
-      map(exists => exists ? { titleExists: true } : null),
+      switchMap((title) => this.checkTitleExists(title)),
+      map((exists) => (exists ? { titleExists: true } : null)),
       catchError(() => of(null)),
-      first()
+      first(),
     );
   }
 
@@ -31,8 +38,8 @@ export class BlogTitleExistsValidator implements AsyncValidator {
     }
 
     return this.blogService.titleExists(title.trim()).pipe(
-      map(response => response.exists),
-      catchError(() => of(false))
+      map((response) => response.exists),
+      catchError(() => of(false)),
     );
   }
 }
@@ -46,18 +53,18 @@ export function blogTitleExistsValidator(blogService: BlogService) {
     return control.valueChanges.pipe(
       debounceTime(400),
       distinctUntilChanged(),
-      switchMap(title => {
+      switchMap((title) => {
         if (!title || title.trim().length < 3) {
           return of(false);
         }
         return blogService.titleExists(title.trim()).pipe(
-          map(response => response.exists),
-          catchError(() => of(false))
+          map((response) => response.exists),
+          catchError(() => of(false)),
         );
       }),
-      map(exists => exists ? { titleExists: true } : null),
+      map((exists) => (exists ? { titleExists: true } : null)),
       catchError(() => of(null)),
-      first()
+      first(),
     );
   };
 }

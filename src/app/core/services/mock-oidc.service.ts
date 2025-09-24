@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MockOidcSecurityService {
   isAuthenticated$ = of({ isAuthenticated: true });
-  userData$ = of({ 
+  userData$ = of({
     preferred_username: 'testuser',
     name: 'Test User',
     email: 'test@example.com',
-    realm_access: { roles: ['user'] }
+    realm_access: { roles: ['user'] },
   });
 
   authorize(): void {

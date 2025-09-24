@@ -258,8 +258,8 @@ export class BlogService {
    */
   titleExists(title: string): Observable<{ exists: boolean }> {
     if (environment.mockData) {
-      const exists = this.mockPosts.some(post => 
-        post.title.toLowerCase().trim() === title.toLowerCase().trim()
+      const exists = this.mockPosts.some(
+        (post) => post.title.toLowerCase().trim() === title.toLowerCase().trim(),
       );
       return of({ exists });
     }
@@ -269,7 +269,7 @@ export class BlogService {
       catchError((error) => {
         console.error('Error checking title existence:', error);
         return of({ exists: false });
-      })
+      }),
     );
   }
 

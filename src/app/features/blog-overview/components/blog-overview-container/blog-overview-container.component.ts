@@ -1,4 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy, inject, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  inject,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { combineLatest } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
@@ -17,7 +23,14 @@ import { BlogListComponent } from '../blog-list/blog-list.component';
   styleUrls: ['./blog-overview-container.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule, BlogFilterComponent, BlogListComponent],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
+    BlogFilterComponent,
+    BlogListComponent,
+  ],
 })
 export class BlogOverviewContainerComponent implements OnInit {
   // Inject services
@@ -112,7 +125,7 @@ export class BlogOverviewContainerComponent implements OnInit {
       (error) => {
         console.error('Navigation failed:', error);
         this.cdr.markForCheck();
-      }
+      },
     );
   }
 }

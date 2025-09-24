@@ -18,11 +18,11 @@ export const routes: Routes = [
       import('./features/blog-detail/blog-detail.module').then((m) => m.BlogDetailModule),
   },
   {
-    path: 'add-blog',
+    path: 'add-blog-page',
     loadChildren: () =>
       import('./features/add-blog-page/add-blog-page.module').then((m) => m.AddBlogPageModule),
-    // canActivate: [isAuthenticatedGuard], // Temporarily disabled for testing
-    // data: { role: 'user' },
+    canActivate: [isAuthenticatedGuard],
+    data: { role: 'user' },
   },
   {
     path: 'unauthorized',

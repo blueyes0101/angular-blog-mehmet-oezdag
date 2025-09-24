@@ -1,15 +1,14 @@
-import { Component, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, output, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-// import { OidcSecurityService } from 'angular-auth-oidc-client'; // Temporarily disabled
-import { MockOidcSecurityService } from '../../services/mock-oidc.service';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { hasRole } from '../../helpers/auth.helpers';
+import { hasRole } from '../../guards/is-authenticated.guard';
 
 @Component({
   selector: 'app-header',
@@ -31,49 +30,56 @@ export class HeaderComponent {
   toggleSidebar = output<void>();
   toggleDarkMode = output<void>();
 
+  private router = inject(Router);
+  private oidc = inject(OidcSecurityService);
+
   // Authentication observables
-  isAuthenticated$ = this.oidcSecurityService.isAuthenticated$.pipe(
-    map(({ isAuthenticated }) => isAuthenticated),
-  );
+  isAuthenticated$ = this.oidc.isAuthenticated$;
+  user$ = this.oidc.userData$;
+  hasRole = hasRole;
 
-  userData$ = this.oidcSecurityService.userData$;
-
-  hasUserRole$ = this.oidcSecurityService.userData$.pipe(
-    map((userData) => hasRole(userData, 'user')),
-  );
-
-  username$ = this.oidcSecurityService.userData$.pipe(
-    map((userData) => userData?.preferred_username || userData?.name || userData?.email || 'User'),
+  username$ = this.oidc.userData$.pipe(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    map(
+      ({ userData }: { userData: any }) =>
+        userData?.preferred_username || userData?.name || userData?.email || 'User',
+    ),
   );
 
   // Navigation items for desktop
   readonly navigationItems = [
     { label: 'Blog', route: '/blog', requiresAuth: false },
-    { label: 'Neuer Post', route: '/add-blog', requiresAuth: true, requiresRole: 'user' },
+    { label: 'Neuer Post', route: '/add-blog-page', requiresAuth: true, requiresRole: 'user' },
     { label: 'Kategorien', route: '/categories', requiresAuth: false },
   ];
 
-  constructor(private oidcSecurityService: MockOidcSecurityService) {}
-
   login(): void {
-    this.oidcSecurityService.authorize();
+    this.oidc.authorize();
   }
 
   logout(): void {
-    this.oidcSecurityService.logoff().subscribe();
+    this.oidc.logoffAndRevokeTokens().subscribe();
   }
 
+  goToAddBlog(): void {
+    this.router.navigateByUrl('/add-blog-page');
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   shouldShowNavItem(item: any): Observable<boolean> {
     if (!item.requiresAuth) {
       return this.isAuthenticated$.pipe(map(() => true));
     }
 
     if (item.requiresRole) {
-      return this.oidcSecurityService.userData$.pipe(
-        map((userData) => hasRole(userData, item.requiresRole)),
+      return this.oidc.userData$.pipe(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        map(({ userData }: { userData: any }) => hasRole(userData, item.requiresRole)),
       );
     }
 
-    return this.isAuthenticated$;
+    return this.isAuthenticated$.pipe(
+      map(({ isAuthenticated }: { isAuthenticated: boolean }) => isAuthenticated),
+    );
   }
 }

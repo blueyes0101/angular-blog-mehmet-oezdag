@@ -15,7 +15,7 @@ export interface BlogFormData {
   templateUrl: './add-blog-form.component.html',
   styleUrls: ['./add-blog-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [CommonModule, ReactiveFormsModule],
 })
 export class AddBlogFormComponent implements OnInit, OnDestroy {
   @Input() isLoading = false;
@@ -28,7 +28,7 @@ export class AddBlogFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private blogService: BlogService
+    private blogService: BlogService,
   ) {}
 
   ngOnInit(): void {
@@ -48,9 +48,9 @@ export class AddBlogFormComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(120),
-          this.noEmptyTrimValidator
+          this.noEmptyTrimValidator,
         ],
-        [blogTitleExistsValidator(this.blogService)]
+        [blogTitleExistsValidator(this.blogService)],
       ],
       content: [
         '',
@@ -58,9 +58,9 @@ export class AddBlogFormComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.minLength(10),
           Validators.maxLength(20000),
-          this.noEmptyTrimValidator
-        ]
-      ]
+          this.noEmptyTrimValidator,
+        ],
+      ],
     });
   }
 
@@ -75,7 +75,7 @@ export class AddBlogFormComponent implements OnInit, OnDestroy {
     if (this.blogForm.valid && !this.isLoading) {
       const formData: BlogFormData = {
         title: this.blogForm.value.title.trim(),
-        content: this.blogForm.value.content.trim()
+        content: this.blogForm.value.content.trim(),
       };
       this.formSubmit.emit(formData);
     }
@@ -93,7 +93,7 @@ export class AddBlogFormComponent implements OnInit, OnDestroy {
     }
 
     const errors = field.errors;
-    
+
     if (errors['required']) {
       return `${this.getFieldLabel(fieldName)} is required`;
     }
@@ -116,9 +116,9 @@ export class AddBlogFormComponent implements OnInit, OnDestroy {
   }
 
   private getFieldLabel(fieldName: string): string {
-    const labels: { [key: string]: string } = {
+    const labels: Record<string, string> = {
       title: 'Title',
-      content: 'Content'
+      content: 'Content',
     };
     return labels[fieldName] || fieldName;
   }

@@ -20,7 +20,7 @@ describe('AddBlogPageComponent', () => {
     const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     const snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
     const oidcSecurityServiceSpy = jasmine.createSpyObj('OidcSecurityService', [], {
-      userData$: of({ name: 'Test User' })
+      userData$: of({ name: 'Test User' }),
     });
 
     await TestBed.configureTestingModule({
@@ -29,8 +29,8 @@ describe('AddBlogPageComponent', () => {
         { provide: BlogService, useValue: blogServiceSpy },
         { provide: Router, useValue: routerSpy },
         { provide: MatSnackBar, useValue: snackBarSpy },
-        { provide: OidcSecurityService, useValue: oidcSecurityServiceSpy }
-      ]
+        { provide: OidcSecurityService, useValue: oidcSecurityServiceSpy },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddBlogPageComponent);
@@ -38,7 +38,9 @@ describe('AddBlogPageComponent', () => {
     blogService = TestBed.inject(BlogService) as jasmine.SpyObj<BlogService>;
     router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
     snackBar = TestBed.inject(MatSnackBar) as jasmine.SpyObj<MatSnackBar>;
-    oidcSecurityService = TestBed.inject(OidcSecurityService) as jasmine.SpyObj<OidcSecurityService>;
+    oidcSecurityService = TestBed.inject(
+      OidcSecurityService,
+    ) as jasmine.SpyObj<OidcSecurityService>;
     fixture.detectChanges();
   });
 
@@ -58,7 +60,7 @@ describe('AddBlogPageComponent', () => {
 
     const formData: BlogFormData = {
       title: 'Test Title',
-      content: 'Test Content'
+      content: 'Test Content',
     };
 
     component.onFormSubmit(formData);
@@ -84,7 +86,7 @@ describe('AddBlogPageComponent', () => {
 
     const formData: BlogFormData = {
       title: 'Test Title',
-      content: 'Test Content'
+      content: 'Test Content',
     };
 
     component.onFormSubmit(formData);
@@ -95,7 +97,7 @@ describe('AddBlogPageComponent', () => {
       expect(snackBar.open).toHaveBeenCalledWith(
         'Blog post created successfully!',
         'Close',
-        jasmine.any(Object)
+        jasmine.any(Object),
       );
       expect(router.navigate).toHaveBeenCalledWith(['/blog']);
       done();
@@ -108,7 +110,7 @@ describe('AddBlogPageComponent', () => {
 
     const formData: BlogFormData = {
       title: 'Test Title',
-      content: 'Test Content'
+      content: 'Test Content',
     };
 
     component.onFormSubmit(formData);
@@ -117,7 +119,7 @@ describe('AddBlogPageComponent', () => {
     expect(snackBar.open).toHaveBeenCalledWith(
       'Error creating blog post. Please try again.',
       'Close',
-      jasmine.any(Object)
+      jasmine.any(Object),
     );
   });
 
@@ -127,7 +129,7 @@ describe('AddBlogPageComponent', () => {
 
     const formData: BlogFormData = {
       title: 'Test Title',
-      content: 'Test Content'
+      content: 'Test Content',
     };
 
     component.onFormSubmit(formData);

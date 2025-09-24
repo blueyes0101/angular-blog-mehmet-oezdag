@@ -1,51 +1,64 @@
 import { inject } from '@angular/core';
-import { Router, CanActivateFn } from '@angular/router';
-// import { OidcSecurityService } from 'angular-auth-oidc-client'; // Temporarily disabled
-import { MockOidcSecurityService } from '../services/mock-oidc.service';
+import {
+  Router,
+  CanActivateFn,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+} from '@angular/router';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { map, take, switchMap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { hasRole } from '../helpers/auth.helpers';
 
-export const isAuthenticatedGuard: CanActivateFn = (route, _state) => {
-  const oidcSecurityService = inject(MockOidcSecurityService);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const hasRole = (userData: any, role: string): boolean => {
+  const realm = userData?.realm_access?.roles ?? [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const resources = Object.values(userData?.resource_access ?? {}).flatMap(
+    (r: any) => r?.roles ?? [],
+  );
+  return [...realm, ...resources].includes(role);
+};
+
+export const isAuthenticatedGuard: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  _state: RouterStateSnapshot,
+) => {
   const router = inject(Router);
+  const oidc = inject(OidcSecurityService);
 
-  return oidcSecurityService.isAuthenticated$.pipe(
+  return oidc.isAuthenticated$.pipe(
     take(1),
-    switchMap(({ isAuthenticated }) => {
-      // Check if user is authenticated
+    switchMap(({ isAuthenticated }: { isAuthenticated: boolean }) => {
       if (!isAuthenticated) {
-        // Trigger login
-        oidcSecurityService.authorize();
+        oidc.authorize();
         return of(false);
       }
 
       // Check if route requires specific role
-      const requiredRole = route.data['role'];
+      const requiredRole = route.data?.['role'];
       if (requiredRole) {
-        // Get user data to check role
-        return oidcSecurityService.userData$.pipe(
+        return oidc.userData$.pipe(
           take(1),
-          map((userData) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          map(({ userData }: { userData: any }) => {
             if (!hasRole(userData, requiredRole)) {
-              // User doesn't have required role
-              router.navigate(['/unauthorized']);
+              router.navigateByUrl('/');
               return false;
             }
             return true;
           }),
           catchError(() => {
-            router.navigate(['/unauthorized']);
+            router.navigateByUrl('/');
             return of(false);
-          })
+          }),
         );
       }
 
       return of(true);
     }),
     catchError(() => {
-      router.navigate(['/unauthorized']);
+      router.navigateByUrl('/');
       return of(false);
-    })
+    }),
   );
 };
