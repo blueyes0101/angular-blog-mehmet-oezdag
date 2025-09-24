@@ -47,7 +47,7 @@ export class BlogOverviewContainerComponent implements OnInit {
   readonly isLoading = this.blogState.isLoading;
   readonly error = this.blogState.error;
 
-  constructor() {}
+  // No constructor needed - using inject() pattern
 
   ngOnInit(): void {
     // Load initial data
@@ -116,10 +116,10 @@ export class BlogOverviewContainerComponent implements OnInit {
    * Navigates to the add blog page
    */
   onAddBlog(): void {
-    console.log('Add Blog button clicked, navigating to /add-blog');
+    // Navigate to add blog page
     this.router.navigate(['/add-blog']).then(
       (success) => {
-        console.log('Navigation successful:', success);
+        // Navigation successful
         this.cdr.markForCheck();
       },
       (error) => {

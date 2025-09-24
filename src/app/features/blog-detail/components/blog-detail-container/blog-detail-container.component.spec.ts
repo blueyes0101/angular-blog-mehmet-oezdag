@@ -26,6 +26,8 @@ describe('BlogDetailContainerComponent (Smart Component)', () => {
     tags: ['test', 'angular', 'blog'],
     featured: true,
     imageUrl: 'https://example.com/test-image.jpg',
+    likedByMe: false,
+    likes: 0,
   };
 
   beforeEach(async () => {

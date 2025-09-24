@@ -19,6 +19,8 @@ describe('BlogListComponent (Dumb Component)', () => {
       tags: ['test'],
       featured: true,
       imageUrl: 'https://example.com/image1.jpg',
+      likedByMe: false,
+      likes: 0,
     },
     {
       id: 2,
@@ -30,6 +32,8 @@ describe('BlogListComponent (Dumb Component)', () => {
       tags: ['test'],
       featured: false,
       imageUrl: 'https://example.com/image2.jpg',
+      likedByMe: false,
+      likes: 0,
     },
   ];
 
@@ -47,19 +51,19 @@ describe('BlogListComponent (Dumb Component)', () => {
   });
 
   it('should be a Dumb Component (only displays data)', () => {
-    // Dumb component should only have @Input properties and display methods
+    // Dumb component should only have input signals and display methods
     expect(component.posts).toBeDefined();
     expect(component.isLoading).toBeDefined();
     expect(component.hasFilters).toBeDefined();
     expect(component.trackByPost).toBeDefined();
 
     // Should not have complex state management - this is a dumb component
-    expect(typeof component.posts).toBe('object');
-    expect(typeof component.isLoading).toBe('boolean');
+    expect(typeof component.posts()).toBe('object');
+    expect(typeof component.isLoading()).toBe('boolean');
   });
 
   it('should display loading spinner when isLoading is true', () => {
-    component.isLoading = true;
+    fixture.componentRef.setInput('isLoading', true);
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement;
@@ -71,8 +75,8 @@ describe('BlogListComponent (Dumb Component)', () => {
   });
 
   it('should display posts when isLoading is false and posts are provided', () => {
-    component.posts = mockBlogPosts;
-    component.isLoading = false;
+    fixture.componentRef.setInput('posts', mockBlogPosts);
+    fixture.componentRef.setInput('isLoading', false);
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement;
@@ -84,9 +88,9 @@ describe('BlogListComponent (Dumb Component)', () => {
   });
 
   it('should display empty state when no posts are available', () => {
-    component.posts = [];
-    component.isLoading = false;
-    component.hasFilters = false;
+    fixture.componentRef.setInput('posts', []);
+    fixture.componentRef.setInput('isLoading', false);
+    fixture.componentRef.setInput('hasFilters', false);
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement;
@@ -99,9 +103,9 @@ describe('BlogListComponent (Dumb Component)', () => {
   });
 
   it('should display filter-specific empty state when hasFilters is true', () => {
-    component.posts = [];
-    component.isLoading = false;
-    component.hasFilters = true;
+    fixture.componentRef.setInput('posts', []);
+    fixture.componentRef.setInput('isLoading', false);
+    fixture.componentRef.setInput('hasFilters', true);
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement;
@@ -113,8 +117,8 @@ describe('BlogListComponent (Dumb Component)', () => {
   });
 
   it('should not display blog grid when loading', () => {
-    component.posts = mockBlogPosts;
-    component.isLoading = true;
+    fixture.componentRef.setInput('posts', mockBlogPosts);
+    fixture.componentRef.setInput('isLoading', true);
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement;
@@ -132,8 +136,8 @@ describe('BlogListComponent (Dumb Component)', () => {
   });
 
   it('should pass correct data to blog card components', () => {
-    component.posts = mockBlogPosts;
-    component.isLoading = false;
+    fixture.componentRef.setInput('posts', mockBlogPosts);
+    fixture.componentRef.setInput('isLoading', false);
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement;
@@ -149,15 +153,15 @@ describe('BlogListComponent (Dumb Component)', () => {
 
   it('should handle posts input changes correctly', () => {
     // Initially no posts
-    component.posts = [];
-    component.isLoading = false;
+    fixture.componentRef.setInput('posts', []);
+    fixture.componentRef.setInput('isLoading', false);
     fixture.detectChanges();
 
     let compiled = fixture.nativeElement;
     expect(compiled.querySelector('.empty-state')).toBeTruthy();
 
     // Add posts
-    component.posts = mockBlogPosts;
+    fixture.componentRef.setInput('posts', mockBlogPosts);
     fixture.detectChanges();
 
     compiled = fixture.nativeElement;
@@ -166,10 +170,10 @@ describe('BlogListComponent (Dumb Component)', () => {
   });
 
   it('should handle isLoading state changes correctly', () => {
-    component.posts = mockBlogPosts;
+    fixture.componentRef.setInput('posts', mockBlogPosts);
 
     // Start with loading
-    component.isLoading = true;
+    fixture.componentRef.setInput('isLoading', true);
     fixture.detectChanges();
 
     let compiled = fixture.nativeElement;
@@ -177,7 +181,7 @@ describe('BlogListComponent (Dumb Component)', () => {
     expect(compiled.querySelector('.blog-posts-grid')).toBeFalsy();
 
     // Stop loading
-    component.isLoading = false;
+    fixture.componentRef.setInput('isLoading', false);
     fixture.detectChanges();
 
     compiled = fixture.nativeElement;
@@ -188,13 +192,14 @@ describe('BlogListComponent (Dumb Component)', () => {
   it('should be a pure display component without side effects', () => {
     // Should only respond to input changes
     // Setting inputs should not trigger side effects
-    component.posts = mockBlogPosts;
-    component.isLoading = true;
-    component.hasFilters = true;
+    fixture.componentRef.setInput('posts', mockBlogPosts);
+    fixture.componentRef.setInput('isLoading', true);
+    fixture.componentRef.setInput('hasFilters', true);
+    fixture.detectChanges();
 
     // Component should simply reflect the new input values
-    expect(component.posts).toBe(mockBlogPosts);
-    expect(component.isLoading).toBe(true);
-    expect(component.hasFilters).toBe(true);
+    expect(component.posts()).toEqual(mockBlogPosts);
+    expect(component.isLoading()).toBe(true);
+    expect(component.hasFilters()).toBe(true);
   });
 });

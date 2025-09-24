@@ -5,7 +5,7 @@ import { of, throwError } from 'rxjs';
 import { BlogService } from '../../../../core/services/blog.service';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { AddBlogPageComponent } from './add-blog-page.component';
-import { BlogFormData } from './add-blog-form/add-blog-form.component';
+import { BlogFormData } from '../add-blog-form/add-blog-form.component';
 
 describe('AddBlogPageComponent', () => {
   let component: AddBlogPageComponent;
@@ -54,7 +54,19 @@ describe('AddBlogPageComponent', () => {
   });
 
   it('should handle form submission successfully', () => {
-    const mockResponse = { id: 1, title: 'Test Title', content: 'Test Content' };
+    const mockResponse = {
+      id: 1,
+      title: 'Test Title',
+      content: 'Test Content',
+      author: 'Test User',
+      publishDate: '2024-01-15',
+      category: 'Test',
+      tags: ['test'],
+      featured: false,
+      imageUrl: 'https://example.com/test.jpg',
+      likedByMe: false,
+      likes: 0,
+    };
     blogService.createBlog.and.returnValue(of(mockResponse));
     spyOn(component, 'onFormReset');
 
@@ -81,7 +93,19 @@ describe('AddBlogPageComponent', () => {
   });
 
   it('should show success message and navigate after successful submission', (done) => {
-    const mockResponse = { id: 1, title: 'Test Title', content: 'Test Content' };
+    const mockResponse = {
+      id: 1,
+      title: 'Test Title',
+      content: 'Test Content',
+      author: 'Test User',
+      publishDate: '2024-01-15',
+      category: 'Test',
+      tags: ['test'],
+      featured: false,
+      imageUrl: 'https://example.com/test.jpg',
+      likedByMe: false,
+      likes: 0,
+    };
     blogService.createBlog.and.returnValue(of(mockResponse));
 
     const formData: BlogFormData = {

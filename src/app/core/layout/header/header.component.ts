@@ -39,7 +39,6 @@ export class HeaderComponent {
   hasRole = hasRole;
 
   username$ = this.oidc.userData$.pipe(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     map(
       ({ userData }: { userData: any }) =>
         userData?.preferred_username || userData?.name || userData?.email || 'User',

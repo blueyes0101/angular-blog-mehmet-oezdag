@@ -23,6 +23,8 @@ describe('Blog Schemas (ZOD Validation)', () => {
       tags: ['test', 'blog'],
       featured: true,
       imageUrl: 'https://example.com/image.jpg',
+      likedByMe: false,
+      likes: 0,
     };
 
     it('should validate a valid blog post', () => {
@@ -144,6 +146,8 @@ describe('Blog Schemas (ZOD Validation)', () => {
         tags: ['test'],
         featured: false,
         imageUrl: 'https://example.com/test.jpg',
+        likedByMe: false,
+        likes: 0,
       };
 
       const blogPosts: BlogPostArray = [blogPost];
@@ -168,6 +172,8 @@ describe('Blog Schemas (ZOD Validation)', () => {
       tags: ['test'],
       featured: false,
       imageUrl: 'https://example.com/test.jpg',
+      likedByMe: false,
+      likes: 0,
     };
 
     it('validateBlogPost should parse valid data', () => {

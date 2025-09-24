@@ -38,6 +38,8 @@ describe('Sprint 2a Integration Tests', () => {
     tags: ['integration', 'test', 'sprint2a'],
     featured: true,
     imageUrl: 'https://example.com/integration-test.jpg',
+    likedByMe: false,
+    likes: 0,
   };
 
   const mockBlogPosts: BlogPost[] = [mockBlogPost];

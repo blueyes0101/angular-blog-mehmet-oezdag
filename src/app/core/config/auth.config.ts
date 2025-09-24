@@ -4,8 +4,8 @@ import { environment } from '../../../environments/environment';
 export const authConfig: PassedInitialConfig = {
   config: {
     authority: environment.auth.authority,
-    redirectUrl: window.location.origin,
-    postLogoutRedirectUri: window.location.origin,
+    redirectUrl: environment.auth.redirectUrl,
+    postLogoutRedirectUri: environment.auth.postLogoutRedirectUri,
     clientId: environment.auth.clientId,
     scope: environment.auth.scope,
     responseType: 'code',

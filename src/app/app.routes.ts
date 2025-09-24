@@ -25,6 +25,11 @@ export const routes: Routes = [
     data: { role: 'user' },
   },
   {
+    path: 'auth',
+    loadChildren: () =>
+      import('./features/auth-panel/auth-panel.routes').then((m) => m.AUTH_ROUTES),
+  },
+  {
     path: 'unauthorized',
     loadComponent: () =>
       import('./core/static/unauthorized/unauthorized.component').then(

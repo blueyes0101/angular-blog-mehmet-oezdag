@@ -12,7 +12,7 @@ import { of } from 'rxjs';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const hasRole = (userData: any, role: string): boolean => {
   const realm = userData?.realm_access?.roles ?? [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   const resources = Object.values(userData?.resource_access ?? {}).flatMap(
     (r: any) => r?.roles ?? [],
   );
