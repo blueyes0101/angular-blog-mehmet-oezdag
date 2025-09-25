@@ -1,0 +1,91 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+  >
+    <!-- Sidebar Header -->
+    <mat-toolbar color="primary" class="sidebar-header">
+      <mat-icon>article</mat-icon>
+      <span class="sidebar-title">Angular Blog</span>
+    </mat-toolbar>
+
+    <!-- Navigation Menu -->
+    <mat-nav-list class="sidebar-nav">
+      @for (item of navigationItems; track item.route) {
+        @if (shouldShowNavItem(item) | async) {
+          <a mat-list-item [routerLink]="item.route" routerLinkActive="active">
+            <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+            <span matListItemTitle>{{ item.label }}</span>
+          </a>
+        }
+      }
+
+      <!-- Divider -->
+      <mat-divider></mat-divider>
+
+      <!-- Authentication Section -->
+      @if ((isAuthenticated$ | async)?.isAuthenticated) {
+        <!-- User Info -->
+        <div class="user-info-section">
+          <mat-list-item>
+            <mat-icon matListItemIcon>account_circle</mat-icon>
+            <span matListItemTitle>{{ username$ | async }}</span>
+          </mat-list-item>
+        </div>
+
+        <!-- Create Blog Button (only on non-handset and if user has role) -->
+        @if (!(isHandset$ | async)) {
+          @if (user$ | async; as u) {
+            @if (hasRole(u.userData, 'user')) {
+              <a mat-list-item (click)="goToAddBlog()" class="create-blog-btn">
+                <mat-icon matListItemIcon>add</mat-icon>
+                <span matListItemTitle>Create Blog</span>
+              </a>
+            }
+          }
+        }
+
+        <!-- Logout -->
+        <a mat-list-item (click)="logout()">
+          <mat-icon matListItemIcon>logout</mat-icon>
+          <span matListItemTitle>Logout</span>
+        </a>
+      } @else {
+        <!-- Login -->
+        <a mat-list-item (click)="login()">
+          <mat-icon matListItemIcon>login</mat-icon>
+          <span matListItemTitle>Login</span>
+        </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="main-content">
+    <!-- Top Toolbar -->
+    <mat-toolbar color="primary" class="top-toolbar">
+      @if (isHandset$ | async) {
+        <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+      }
+
+      <span class="toolbar-title">Angular Blog</span>
+
+      <div class="spacer"></div>
+
+      <!-- Dark Mode Toggle -->
+      <button mat-icon-button (click)="toggleDarkMode()" matTooltip="Toggle Dark Mode">
+        <mat-icon>dark_mode</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <!-- Content Area -->
+    <div class="content-area">
+      <ng-content></ng-content>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

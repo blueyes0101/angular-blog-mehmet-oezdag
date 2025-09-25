@@ -1,0 +1,194 @@
+.sidenav-container {
+  height: 100vh;
+  width: 100vw;
+}
+
+.sidenav {
+  width: 280px;
+
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+    min-height: 64px;
+
+    .sidebar-title {
+      font-size: 1.25rem;
+      font-weight: 500;
+    }
+  }
+
+  .sidebar-nav {
+    padding-top: 8px;
+
+    .mat-mdc-list-item {
+      margin: 4px 8px;
+      border-radius: 8px;
+
+      &.active {
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+
+      &.create-blog-btn {
+        background-color: rgba(25, 118, 210, 0.08);
+        color: #1976d2;
+
+        &:hover {
+          background-color: rgba(25, 118, 210, 0.12);
+        }
+      }
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+
+    .user-info-section {
+      padding: 8px 0;
+
+      .mat-mdc-list-item {
+        background-color: rgba(0, 0, 0, 0.02);
+        margin: 0 8px;
+      }
+    }
+
+    mat-divider {
+      margin: 12px 0;
+    }
+  }
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .top-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .toolbar-title {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-left: 8px;
+    }
+
+    .spacer {
+      flex: 1;
+    }
+  }
+
+  .content-area {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    background-color: #fafafa;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .sidenav {
+    width: 260px;
+
+    .sidebar-header {
+      min-height: 56px;
+
+      .sidebar-title {
+        font-size: 1.1rem;
+      }
+    }
+  }
+
+  .main-content {
+    .top-toolbar {
+      min-height: 56px;
+
+      .toolbar-title {
+        font-size: 1.1rem;
+      }
+    }
+
+    .content-area {
+      padding: 12px;
+    }
+  }
+}
+
+// Dark theme support
+:host-context(.dark-theme) {
+  .sidenav {
+    background-color: #303030;
+    color: white;
+
+    .sidebar-nav {
+      .mat-mdc-list-item {
+        &.active {
+          background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.04);
+        }
+
+        &.create-blog-btn {
+          background-color: rgba(144, 202, 249, 0.12);
+          color: #90caf9;
+
+          &:hover {
+            background-color: rgba(144, 202, 249, 0.16);
+          }
+        }
+      }
+
+      .user-info-section {
+        .mat-mdc-list-item {
+          background-color: rgba(255, 255, 255, 0.04);
+        }
+      }
+    }
+  }
+
+  .main-content {
+    .top-toolbar {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .content-area {
+      background-color: #121212;
+      color: white;
+    }
+  }
+}
+
+// Disabled state
+.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.layout,
+mat-sidenav-container,
+mat-sidenav-content,
+.content {
+  height: 100%;
+}
+.brand {
+  font-weight: 600;
+}
+.toolbar-title {
+  cursor: pointer;
+}
+.spacer {
+  flex: 1 1 auto;
+}
+.ml-2 {
+  margin-left: 0.5rem;
+}
+a.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
