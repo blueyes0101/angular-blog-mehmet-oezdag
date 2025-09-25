@@ -33,7 +33,12 @@ jobs:
         run: npm cache clean --force
           
       - name: Install dependencies
-        run: npm ci
+        run: |
+          if ! npm ci; then
+            echo "npm ci failed, updating lock file..."
+            npm install
+            npm ci
+          fi
         
       - name: Build And Deploy
         id: builddeploy

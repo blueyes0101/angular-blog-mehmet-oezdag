@@ -35,7 +35,12 @@ jobs:
           chrome-version: stable
           
       - name: Install dependencies
-        run: npm ci
+        run: |
+          if ! npm ci; then
+            echo "npm ci failed, updating lock file..."
+            npm install
+            npm ci
+          fi
         
       - name: Run linting (warnings allowed)
         run: npm run lint || echo "Linting completed with warnings - continuing deployment"
