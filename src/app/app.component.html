@@ -3,32 +3,9 @@
   <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
 }
 
-<!-- Header -->
-<mat-toolbar color="primary" class="blog-header">
-  <mat-icon>article</mat-icon>
-  <span class="title">{{ title }}</span>
-
-  <div class="header-spacer"></div>
-
-  <button mat-icon-button (click)="toggleDemo()" matTooltip="Demo-Komponente anzeigen/verbergen">
-    <mat-icon>{{ showDemo ? 'visibility_off' : 'visibility' }}</mat-icon>
-  </button>
-
-  <button mat-icon-button (click)="toggleDarkMode()" matTooltip="Dark Mode umschalten">
-    <mat-icon>{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
-  </button>
-
-  <button
-    mat-icon-button
-    (click)="toggleSwaggerHelp()"
-    matTooltip="Swagger-UI Hilfe anzeigen"
-    class="swagger-help-btn"
-  >
-    <mat-icon>help_outline</mat-icon>
-  </button>
-</mat-toolbar>
-
-<!-- Swagger-UI Help Popup -->
+<!-- Responsive Sidebar Layout -->
+<app-sidebar>
+  <!-- Swagger-UI Help Popup -->
 @if (showSwaggerHelp) {
   <div
     class="swagger-help-overlay"
@@ -216,11 +193,12 @@
   <router-outlet></router-outlet>
 </div>
 
-<!-- Footer -->
-<footer class="blog-footer">
-  <mat-divider></mat-divider>
-  <div class="footer-content">
-    <p>&copy; 2024 Angular Blog - Mehmet Oezdag</p>
-    <p>Erstellt mit Angular {{ getAngularVersion() }} und Angular Material</p>
-  </div>
-</footer>
+  <!-- Footer -->
+  <footer class="blog-footer">
+    <mat-divider></mat-divider>
+    <div class="footer-content">
+      <p>&copy; 2024 Angular Blog - Mehmet Oezdag</p>
+      <p>Erstellt mit Angular {{ getAngularVersion() }} und Angular Material</p>
+    </div>
+  </footer>
+</app-sidebar>

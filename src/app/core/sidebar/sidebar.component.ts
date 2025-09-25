@@ -52,8 +52,8 @@ export class SidebarComponent {
 
   username$ = this.oidc.userData$.pipe(
     map(
-      ({ userData }: { userData: any }) =>
-        userData?.preferred_username || userData?.name || userData?.email || 'User',
+      ({ userData }: { userData: unknown }) =>
+        (userData as any)?.preferred_username || (userData as any)?.name || (userData as any)?.email || 'User',
     ),
     takeUntilDestroyed(),
   );

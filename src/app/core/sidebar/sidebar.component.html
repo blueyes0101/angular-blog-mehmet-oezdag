@@ -38,28 +38,28 @@
         </div>
 
         <!-- Create Blog Button (only on non-handset and if user has role) -->
-        @if (!(isHandset$ | async)) {
+        @if ((isHandset$ | async) === false) {
           @if (user$ | async; as u) {
             @if (hasRole(u.userData, 'user')) {
-              <a mat-list-item (click)="goToAddBlog()" class="create-blog-btn">
+              <button mat-list-item (click)="goToAddBlog()" (keydown.enter)="goToAddBlog()" class="create-blog-btn" tabindex="0">
                 <mat-icon matListItemIcon>add</mat-icon>
                 <span matListItemTitle>Create Blog</span>
-              </a>
+              </button>
             }
           }
         }
 
         <!-- Logout -->
-        <a mat-list-item (click)="logout()">
+        <button mat-list-item (click)="logout()" (keydown.enter)="logout()" tabindex="0">
           <mat-icon matListItemIcon>logout</mat-icon>
           <span matListItemTitle>Logout</span>
-        </a>
+        </button>
       } @else {
         <!-- Login -->
-        <a mat-list-item (click)="login()">
+        <button mat-list-item (click)="login()" (keydown.enter)="login()" tabindex="0">
           <mat-icon matListItemIcon>login</mat-icon>
           <span matListItemTitle>Login</span>
-        </a>
+        </button>
       }
     </mat-nav-list>
   </mat-sidenav>

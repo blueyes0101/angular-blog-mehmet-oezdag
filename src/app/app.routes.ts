@@ -4,6 +4,11 @@ import { isAuthenticatedGuard } from './core/guards/is-authenticated.guard';
 export const routes: Routes = [
   {
     path: '',
+    redirectTo: '/overview',
+    pathMatch: 'full',
+  },
+  {
+    path: 'overview',
     redirectTo: '/blog',
     pathMatch: 'full',
   },
@@ -19,8 +24,10 @@ export const routes: Routes = [
   },
   {
     path: 'add-blog-page',
-    loadChildren: () =>
-      import('./features/add-blog-page/add-blog-page.module').then((m) => m.AddBlogPageModule),
+    loadComponent: () =>
+      import('./features/add-blog-page/add-blog-page-routing.module').then(
+        (m) => m.AddBlogPageComponent,
+      ),
     canActivate: [isAuthenticatedGuard],
     data: { role: 'user' },
   },

@@ -15,14 +15,26 @@
 
   <!-- Post Image -->
   <div class="post-image-container">
-    <img
-      [ngSrc]="post().imageUrl"
-      [alt]="post().title"
-      class="post-image"
-      loading="lazy"
-      width="350"
-      height="200"
-    />
+    @if (isFirst()) {
+      <img
+        [ngSrc]="post().imageUrl"
+        [alt]="post().title"
+        class="post-image"
+        loading="eager"
+        priority
+        width="350"
+        height="200"
+      />
+    } @else {
+      <img
+        [ngSrc]="post().imageUrl"
+        [alt]="post().title"
+        class="post-image"
+        loading="lazy"
+        width="350"
+        height="200"
+      />
+    }
   </div>
 
   <mat-card-header>

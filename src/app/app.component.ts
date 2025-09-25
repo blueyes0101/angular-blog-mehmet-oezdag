@@ -22,6 +22,7 @@ import { MatInputModule } from '@angular/material/input';
 import { DemoComponent } from './demo/demo.component';
 import { BlogPost } from './core/schemas/blog.schemas';
 import { RouterStateStore } from './core/state/router-state.store';
+import { SidebarComponent } from './core/sidebar/sidebar.component';
 
 interface TestResult {
   success: boolean;
@@ -49,6 +50,7 @@ interface TestResult {
     MatDialogModule,
     MatTooltipModule,
     DemoComponent,
+    SidebarComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
