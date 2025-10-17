@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -9,6 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BlogPost } from '../../../../core/schemas/blog.schemas';
 import { BlogDetailViewComponent } from '../blog-detail-view/blog-detail-view.component';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-blog-detail-container',
@@ -27,10 +28,9 @@ import { BlogDetailViewComponent } from '../blog-detail-view/blog-detail-view.co
 export class BlogDetailContainerComponent implements OnInit {
   blogPost$: Observable<BlogPost | null> = of(null);
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-  ) {}
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly languageService = inject(LanguageService);
 
   ngOnInit(): void {
     // Get the resolved blog post from the route data
@@ -41,7 +41,8 @@ export class BlogDetailContainerComponent implements OnInit {
    * Navigate back to blog overview
    */
   onBackToBlog(): void {
-    this.router.navigate(['/blog']);
+    const currentLang = this.languageService.currentLanguage();
+    this.router.navigate([`/${currentLang}/blog`]);
   }
 
   /**

@@ -16,37 +16,37 @@
     <!-- Navigation Menu -->
     <mat-nav-list class="sidebar-nav">
       @for (item of navigationItems; track item.route) {
-        @if (shouldShowNavItem(item) | async) {
-          <a mat-list-item [routerLink]="item.route" routerLinkActive="active">
-            <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
-            <span matListItemTitle>{{ item.label }}</span>
-          </a>
-        }
+        <a mat-list-item [routerLink]="item.route" routerLinkActive="active">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
       }
 
       <!-- Divider -->
       <mat-divider></mat-divider>
 
       <!-- Authentication Section -->
-      @if ((isAuthenticated$ | async)?.isAuthenticated) {
+      @if (isAuthenticated()) {
         <!-- User Info -->
         <div class="user-info-section">
           <mat-list-item>
             <mat-icon matListItemIcon>account_circle</mat-icon>
-            <span matListItemTitle>{{ username$ | async }}</span>
+            <span matListItemTitle>{{ username() }}</span>
           </mat-list-item>
         </div>
 
-        <!-- Create Blog Button (only on non-handset and if user has role) -->
-        @if ((isHandset$ | async) === false) {
-          @if (user$ | async; as u) {
-            @if (hasRole(u.userData, 'user')) {
-              <button mat-list-item (click)="goToAddBlog()" (keydown.enter)="goToAddBlog()" class="create-blog-btn" tabindex="0">
-                <mat-icon matListItemIcon>add</mat-icon>
-                <span matListItemTitle>Create Blog</span>
-              </button>
-            }
-          }
+        <!-- Create Blog Button (only if user has role) -->
+        @if (canAddBlog()) {
+          <button
+            mat-list-item
+            (click)="goToAddBlog()"
+            (keydown.enter)="goToAddBlog()"
+            class="create-blog-btn"
+            tabindex="0"
+          >
+            <mat-icon matListItemIcon>add</mat-icon>
+            <span matListItemTitle>Create New Blog</span>
+          </button>
         }
 
         <!-- Logout -->
@@ -76,6 +76,9 @@
       <span class="toolbar-title">Angular Blog</span>
 
       <div class="spacer"></div>
+
+      <!-- Language Switcher -->
+      <app-language-switcher></app-language-switcher>
 
       <!-- Dark Mode Toggle -->
       <button mat-icon-button (click)="toggleDarkMode()" matTooltip="Toggle Dark Mode">

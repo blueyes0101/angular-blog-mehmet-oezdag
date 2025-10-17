@@ -9,7 +9,7 @@
   @if (post().featured) {
     <div class="featured-badge">
       <mat-icon>star</mat-icon>
-      Featured
+      {{ 'BLOG.FEATURED' | translate }}
     </div>
   }
 
@@ -20,7 +20,6 @@
         [ngSrc]="post().imageUrl"
         [alt]="post().title"
         class="post-image"
-        loading="eager"
         priority
         width="350"
         height="200"
@@ -40,7 +39,8 @@
   <mat-card-header>
     <mat-card-title>{{ post().title }}</mat-card-title>
     <mat-card-subtitle>
-      von {{ post().author }} • {{ formatDate(post().publishDate) }}
+      {{ 'BLOG.WRITTEN_BY' | translate: { author: post().author } }} •
+      {{ formatDate(post().publishDate) }}
     </mat-card-subtitle>
   </mat-card-header>
 
@@ -64,12 +64,17 @@
   <mat-card-actions align="end">
     <button mat-button color="primary" (click)="onReadMore()">
       <mat-icon>read_more</mat-icon>
-      Weiterlesen
+      {{ 'BLOG.READ_MORE' | translate }}
     </button>
-    <button mat-icon-button>
+    <button mat-icon-button [matTooltip]="'BLOG.SHARE' | translate">
       <mat-icon>share</mat-icon>
     </button>
-    <button mat-icon-button (click)="onLikeClick()" [color]="post().likedByMe ? 'warn' : ''">
+    <button
+      mat-icon-button
+      (click)="onLikeClick()"
+      [color]="post().likedByMe ? 'warn' : ''"
+      [matTooltip]="'BLOG.LIKE' | translate"
+    >
       <mat-icon>{{ post().likedByMe ? 'favorite' : 'favorite_border' }}</mat-icon>
       @if (post().likes && post().likes > 0) {
         <span class="like-count">{{ post().likes }}</span>

@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, computed } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -10,11 +10,20 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { hasRole } from '../guards/is-authenticated.guard';
 import { Observable } from 'rxjs';
+import { LanguageSwitcherComponent } from '../../shared/components/language-switcher/language-switcher.component';
+import { AuthStore } from '../auth/auth.store';
+import { LanguageService } from '../services/language.service';
 
+/**
+ * Sidebar Component with Modern Signal-Based Authentication
+ *
+ * This component uses the centralized AuthStore for reactive authentication state
+ * instead of directly injecting OidcSecurityService. This provides better
+ * separation of concerns and cleaner component logic.
+ */
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -28,6 +37,8 @@ import { Observable } from 'rxjs';
     MatListModule,
     MatButtonModule,
     MatMenuModule,
+    MatTooltipModule,
+    LanguageSwitcherComponent,
     MatDividerModule,
   ],
   templateUrl: './sidebar.component.html',
@@ -36,7 +47,8 @@ import { Observable } from 'rxjs';
 export class SidebarComponent {
   private breakpointObserver = inject(BreakpointObserver);
   private router = inject(Router);
-  private oidc = inject(OidcSecurityService);
+  private languageService = inject(LanguageService);
+  readonly authStore = inject(AuthStore);
 
   // Responsive breakpoint
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
@@ -45,18 +57,17 @@ export class SidebarComponent {
     takeUntilDestroyed(),
   );
 
-  // Authentication observables
-  isAuthenticated$ = this.oidc.isAuthenticated$.pipe(takeUntilDestroyed());
-  user$ = this.oidc.userData$.pipe(takeUntilDestroyed());
-  hasRole = hasRole;
+  // Authentication state from AuthStore (using Signals)
+  isAuthenticated = this.authStore.isAuthenticated;
+  userData = this.authStore.userData;
+  username = this.authStore.username;
+  initials = this.authStore.initials;
+  roles = this.authStore.roles;
 
-  username$ = this.oidc.userData$.pipe(
-    map(
-      ({ userData }: { userData: unknown }) =>
-        (userData as any)?.preferred_username || (userData as any)?.name || (userData as any)?.email || 'User',
-    ),
-    takeUntilDestroyed(),
-  );
+  // Computed property to check if user can add blog posts
+  canAddBlog = computed(() => {
+    return this.isAuthenticated() && this.authStore.hasRole('user');
+  });
 
   // Navigation items
   readonly navigationItems = [
@@ -65,38 +76,33 @@ export class SidebarComponent {
     { label: 'Kategorien', route: '/categories', icon: 'category', requiresAuth: false },
   ];
 
+  /**
+   * Trigger login flow
+   */
   login(): void {
-    this.oidc.authorize();
+    this.authStore.login();
   }
 
+  /**
+   * Trigger logout flow
+   */
   logout(): void {
-    this.oidc.logoffAndRevokeTokens().subscribe();
+    this.authStore.logout();
   }
 
+  /**
+   * Navigate to add blog page (protected route)
+   * Uses current language prefix for proper routing
+   */
   goToAddBlog(): void {
-    this.router.navigateByUrl('/add-blog-page');
+    const currentLang = this.languageService.getCurrentLanguage();
+    this.router.navigate([currentLang, 'add-blog-page']);
+    console.log('[Sidebar] Navigating to add-blog-page with language:', currentLang);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  shouldShowNavItem(item: any): Observable<boolean> {
-    if (!item.requiresAuth) {
-      return this.isAuthenticated$.pipe(map(() => true));
-    }
-
-    if (item.requiresRole) {
-      return this.oidc.userData$.pipe(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        map(({ userData }: { userData: any }) => hasRole(userData, item.requiresRole)),
-        takeUntilDestroyed(),
-      );
-    }
-
-    return this.isAuthenticated$.pipe(
-      map(({ isAuthenticated }: { isAuthenticated: boolean }) => isAuthenticated),
-      takeUntilDestroyed(),
-    );
-  }
-
+  /**
+   * Toggle dark mode theme
+   */
   toggleDarkMode(): void {
     const isDarkMode = document.body.classList.contains('dark-theme');
     if (isDarkMode) {

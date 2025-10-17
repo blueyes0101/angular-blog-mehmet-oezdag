@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -6,10 +6,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { BlogService } from '../../../../core/services/blog.service';
-// import { OidcSecurityService } from 'angular-auth-oidc-client'; // Temporarily disabled
-import { MockOidcSecurityService } from '../../../../core/services/mock-oidc.service';
+import { AuthStore } from '../../../../core/auth/auth.store';
 import { AddBlogFormComponent, BlogFormData } from '../add-blog-form/add-blog-form.component';
 import { Subject, takeUntil } from 'rxjs';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-add-blog-page',
@@ -21,18 +21,21 @@ import { Subject, takeUntil } from 'rxjs';
 export class AddBlogPageComponent implements OnInit, OnDestroy {
   isLoading = false;
   showSuccessMessage = false;
-  userData$: any;
   private destroy$ = new Subject<void>();
 
-  constructor(
-    private router: Router,
-    private snackBar: MatSnackBar,
-    private blogService: BlogService,
-    private oidcSecurityService: MockOidcSecurityService,
-  ) {}
+  private readonly router = inject(Router);
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly blogService = inject(BlogService);
+  private readonly authStore = inject(AuthStore);
+  private readonly languageService = inject(LanguageService);
+
+  // Expose authentication state
+  readonly userData = this.authStore.userData;
+  readonly username = this.authStore.username;
 
   ngOnInit(): void {
-    this.userData$ = this.oidcSecurityService.userData$;
+    console.log('[AddBlogPage] Component initialized');
+    console.log('[AddBlogPage] User:', this.username());
   }
 
   ngOnDestroy(): void {
@@ -46,10 +49,13 @@ export class AddBlogPageComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.showSuccessMessage = false;
 
+    // Get author from authenticated user
+    const authorName = this.username() || 'Anonymous';
+
     const blogData = {
       title: formData.title,
       content: formData.content,
-      author: 'Anonymous', // This could be enhanced to get from user data
+      author: authorName,
       publishDate: new Date().toISOString().split('T')[0],
       category: 'General',
       tags: [],
@@ -59,11 +65,13 @@ export class AddBlogPageComponent implements OnInit, OnDestroy {
       likes: 0,
     };
 
+    console.log('[AddBlogPage] Creating blog post:', blogData);
+
     this.blogService
       .createBlog(blogData)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response) => {
+        next: (_response) => {
           this.isLoading = false;
           this.showSuccessMessage = true;
 
@@ -76,7 +84,8 @@ export class AddBlogPageComponent implements OnInit, OnDestroy {
 
           // Navigate back to blog overview after a short delay
           setTimeout(() => {
-            this.router.navigate(['/blog']);
+            const currentLang = this.languageService.currentLanguage();
+            this.router.navigate([`/${currentLang}/blog`]);
           }, 2000);
         },
         error: (error) => {
@@ -97,6 +106,7 @@ export class AddBlogPageComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-    this.router.navigate(['/blog']);
+    const currentLang = this.languageService.currentLanguage();
+    this.router.navigate([`/${currentLang}/blog`]);
   }
 }

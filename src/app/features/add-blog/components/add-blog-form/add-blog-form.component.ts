@@ -36,7 +36,7 @@ export class AddBlogFormComponent {
 
   // Output signals
   submitBlog = output<Partial<BlogPost>>();
-  cancel = output<void>();
+  cancelForm = output<void>();
 
   // Form state signals
   title = signal('');
@@ -115,6 +115,6 @@ export class AddBlogFormComponent {
    * Handles cancel action
    */
   onCancel(): void {
-    this.cancel.emit();
+    this.cancelForm.emit();
   }
 }

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Silent Token Renewal</title>
+  </head>
+  <body>
+    <!--
+      Silent Token Renewal Page
+
+      This page is loaded in a hidden iframe to silently renew access tokens
+      before they expire, providing a seamless user experience without
+      requiring re-authentication.
+
+      How it works:
+      1. The angular-auth-oidc-client library loads this page in a hidden iframe
+      2. This page redirects to Keycloak with the refresh token
+      3. Keycloak issues new tokens without user interaction
+      4. The new tokens are sent back to the parent window via the custom event
+      5. The iframe is destroyed after token renewal
+
+      This mechanism prevents:
+      - User session interruptions
+      - Full page redirects to login
+      - Loss of application state
+    -->
+    <script>
+      /**
+       * OIDC Silent Renew Handler
+       *
+       * This script dispatches a custom event to notify the parent window
+       * that the silent renewal process is complete.
+       */
+      window.onload = function () {
+        // Get reference to parent window
+        var parent = window.parent;
+
+        // Create custom event with renewal information
+        var event = new CustomEvent('oidc-silent-renew-message', {
+          detail: {
+            url: window.location,
+            srcFrameId: window.frameElement?.id,
+          },
+        });
+
+        // Dispatch event to parent window
+        parent.dispatchEvent(event);
+
+        console.log('[Silent Renew] Token renewal completed');
+      };
+    </script>
+  </body>
+</html>

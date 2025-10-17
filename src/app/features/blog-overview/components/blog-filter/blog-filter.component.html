@@ -4,13 +4,13 @@
       <div class="filter-row">
         <!-- Category Filter -->
         <mat-form-field appearance="outline" class="category-select">
-          <mat-label>Kategorie auswählen</mat-label>
+          <mat-label>{{ 'BLOG.FILTER_BY_CATEGORY' | translate }}</mat-label>
           <mat-select
             [value]="selectedCategory || ''"
             (selectionChange)="onCategoryChange($event)"
             [disabled]="isLoading"
           >
-            <mat-option value="">Alle Kategorien</mat-option>
+            <mat-option value="">{{ 'BLOG.ALL_CATEGORIES' | translate }}</mat-option>
             @for (category of categories; track category) {
               <mat-option [value]="category">{{ category }}</mat-option>
             }
@@ -26,7 +26,11 @@
           class="featured-filter"
         >
           <mat-icon>{{ showOnlyFeatured ? 'star' : 'star_border' }}</mat-icon>
-          {{ showOnlyFeatured ? 'Alle anzeigen' : 'Nur Featured' }}
+          {{
+            showOnlyFeatured
+              ? ('BLOG.ALL_POSTS' | translate)
+              : ('BLOG.SHOW_FEATURED_ONLY' | translate)
+          }}
         </button>
 
         <!-- Reset Filter -->
@@ -38,7 +42,7 @@
           class="reset-filter"
         >
           <mat-icon>refresh</mat-icon>
-          Filter zurücksetzen
+          {{ 'BLOG.RESET_FILTERS' | translate }}
         </button>
 
         <!-- Refresh Button -->
@@ -47,7 +51,7 @@
           (click)="onRefresh()"
           [disabled]="isLoading"
           class="refresh-button"
-          matTooltip="Aktualisieren"
+          [matTooltip]="'BLOG.REFRESH' | translate"
         >
           <mat-icon>refresh</mat-icon>
         </button>

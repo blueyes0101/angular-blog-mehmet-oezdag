@@ -12,19 +12,22 @@
 // };
 export const environment = {
   production: true,
-  apiUrl: '', // No backend deployed, using mock data
-  mockData: true,
+  apiUrl: 'https://d-cap-blog-backend---v2.whitepond-b96fee4b.westeurope.azurecontainerapps.io',
+  mockData: false,
   auth: {
-    // Hocanın verdiği Keycloak host + realm: master
+    // Keycloak authority URL - MUST use 'blog' realm (not 'master')
     authority:
-      'https://d-cap-keyclaok.kindbay-711f60b2.westeurope.azurecontainerapps.io/realms/master',
+      'https://d-cap-keyclaok.kindbay-711f60b2.westeurope.azurecontainerapps.io/realms/blog',
 
-    // !!! Burası önemli: clientId'yi öğretmenden alman gerek (public SPA client).
-    // Sıklıkla 'angular', 'spa', 'frontend' gibi olur.
-    clientId: '<PUT_NEED_CLIENT_ID_HERE>',
+    // Keycloak client ID for this SPA
+    clientId: 'spa-blog',
 
-    scope: 'openid profile email',
-    redirectUrl: 'http://localhost:4200',
-    postLogoutRedirectUri: 'http://localhost:4200',
+    // OAuth 2.0 scopes - offline_access enables refresh tokens
+    scope: 'openid profile email offline_access',
+
+    // Redirect URLs - dynamically use current origin in production
+    redirectUrl: window?.location?.origin ?? 'https://your-production-url.azurestaticapps.net',
+    postLogoutRedirectUri:
+      window?.location?.origin ?? 'https://your-production-url.azurestaticapps.net',
   },
 };

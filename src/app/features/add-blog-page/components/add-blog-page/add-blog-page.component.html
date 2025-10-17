@@ -3,7 +3,9 @@
     <mat-card-header>
       <mat-card-title>Create New Blog Post</mat-card-title>
       <mat-card-subtitle>
-        @if (userData$ | async; as userData) {
+        @if (username()) {
+          <span>Author: {{ username() }}</span>
+        } @else {
           <span>Author: Anonymous</span>
         }
       </mat-card-subtitle>

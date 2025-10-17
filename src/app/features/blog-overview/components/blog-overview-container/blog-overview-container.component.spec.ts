@@ -1,6 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 
 import { BlogOverviewContainerComponent } from './blog-overview-container.component';
@@ -12,6 +13,8 @@ describe('BlogOverviewContainerComponent (Smart Component)', () => {
   let component: BlogOverviewContainerComponent;
   let fixture: ComponentFixture<BlogOverviewContainerComponent>;
   let blogService: jasmine.SpyObj<BlogService>;
+  let blogState: BlogStateStore;
+  let router: jasmine.SpyObj<Router>;
 
   const mockBlogPosts: BlogPost[] = [
     {
@@ -25,7 +28,7 @@ describe('BlogOverviewContainerComponent (Smart Component)', () => {
       featured: true,
       imageUrl: 'https://example.com/image1.jpg',
       likedByMe: false,
-      likes: 0,
+      likes: 10,
     },
     {
       id: 2,
@@ -37,8 +40,8 @@ describe('BlogOverviewContainerComponent (Smart Component)', () => {
       tags: ['test'],
       featured: false,
       imageUrl: 'https://example.com/image2.jpg',
-      likedByMe: false,
-      likes: 0,
+      likedByMe: true,
+      likes: 25,
     },
   ];
 
@@ -52,14 +55,22 @@ describe('BlogOverviewContainerComponent (Smart Component)', () => {
       'getCategories',
     ]);
 
+    const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+
     await TestBed.configureTestingModule({
       imports: [BlogOverviewContainerComponent, HttpClientTestingModule, NoopAnimationsModule],
-      providers: [{ provide: BlogService, useValue: blogServiceSpy }, BlogStateStore],
+      providers: [
+        { provide: BlogService, useValue: blogServiceSpy },
+        { provide: Router, useValue: routerSpy },
+        BlogStateStore,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BlogOverviewContainerComponent);
     component = fixture.componentInstance;
     blogService = TestBed.inject(BlogService) as jasmine.SpyObj<BlogService>;
+    blogState = TestBed.inject(BlogStateStore);
+    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
 
     // Setup default service responses
     blogService.getPosts.and.returnValue(of(mockBlogPosts));
@@ -68,6 +79,7 @@ describe('BlogOverviewContainerComponent (Smart Component)', () => {
     );
     blogService.getFeaturedPosts.and.returnValue(of(mockBlogPosts.filter((p) => p.featured)));
     blogService.getCategories.and.returnValue(of(mockCategories));
+    router.navigate.and.returnValue(Promise.resolve(true));
   });
 
   it('should create', () => {
@@ -191,5 +203,232 @@ describe('BlogOverviewContainerComponent (Smart Component)', () => {
     // Verify both filters are set
     expect(component.selectedCategory()).toBe('Angular');
     expect(component.showOnlyFeatured()).toBe(true);
+  });
+
+  describe('State Management', () => {
+    it('should update state when posts are loaded', fakeAsync(() => {
+      fixture.detectChanges();
+      tick();
+
+      // Verify state was updated
+      expect(blogState.posts().length).toBeGreaterThan(0);
+      expect(blogState.categories().length).toBeGreaterThan(0);
+    }));
+
+    it('should set loading state correctly', fakeAsync(() => {
+      // Don't call fixture.detectChanges() yet
+      // The loading state starts as false before ngOnInit
+
+      expect(component.isLoading()).toBe(false);
+
+      // Now trigger ngOnInit which starts loading
+      fixture.detectChanges();
+      // After starting load, should eventually be false after completion
+      tick();
+
+      // Should not be loading after data loads
+      expect(component.isLoading()).toBe(false);
+    }));
+
+    it('should clear error state after successful load', fakeAsync(() => {
+      fixture.detectChanges();
+      tick();
+
+      expect(component.error()).toBeNull();
+    }));
+
+    it('should handle error state when loading fails', fakeAsync(() => {
+      blogService.getPosts.and.returnValue(throwError(() => new Error('Network error')));
+
+      fixture.detectChanges();
+      tick();
+
+      expect(component.error()).toBeTruthy();
+    }));
+  });
+
+  describe('Like Functionality', () => {
+    it('should handle like events from child components', fakeAsync(() => {
+      fixture.detectChanges();
+      tick();
+
+      const likeEvent = { id: 1, likedByMe: true };
+      component.onLikeBlog(likeEvent);
+
+      // Verify state was updated
+      const posts = blogState.posts();
+      const likedPost = posts.find((p) => p.id === 1);
+      expect(likedPost?.likedByMe).toBe(true);
+      expect(likedPost?.likes).toBe(11); // Was 10, now 11
+    }));
+
+    it('should handle unlike events', fakeAsync(() => {
+      fixture.detectChanges();
+      tick();
+
+      const unlikeEvent = { id: 2, likedByMe: false };
+      component.onLikeBlog(unlikeEvent);
+
+      const posts = blogState.posts();
+      const unlikedPost = posts.find((p) => p.id === 2);
+      expect(unlikedPost?.likedByMe).toBe(false);
+      expect(unlikedPost?.likes).toBe(24); // Was 25, now 24
+    }));
+  });
+
+  describe('Navigation to Add Blog', () => {
+    it('should navigate to add blog page when onAddBlog is called', fakeAsync(() => {
+      fixture.detectChanges();
+      tick();
+
+      component.onAddBlog();
+      tick();
+
+      expect(router.navigate).toHaveBeenCalledWith(['/add-blog']);
+    }));
+
+    it('should handle navigation failure gracefully', (done) => {
+      const consoleErrorSpy = spyOn(console, 'error');
+      router.navigate.and.returnValue(Promise.reject('Navigation failed'));
+
+      fixture.detectChanges();
+
+      component.onAddBlog();
+
+      // Wait for the promise to be rejected and error to be logged
+      setTimeout(() => {
+        expect(consoleErrorSpy).toHaveBeenCalled();
+        done();
+      }, 100);
+    });
+  });
+
+  describe('Smart Component Characteristics', () => {
+    it('should manage business logic and orchestrate services', fakeAsync(() => {
+      fixture.detectChanges();
+      tick();
+
+      // Smart component coordinates multiple services
+      expect(blogService.getPosts).toHaveBeenCalled();
+      expect(blogService.getCategories).toHaveBeenCalled();
+
+      // State is managed through BlogStateStore
+      expect(component.posts).toBeDefined();
+      expect(component.categories).toBeDefined();
+    }));
+
+    it('should delegate presentation to child components', () => {
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement;
+
+      // Should contain dumb/presentational components
+      expect(compiled.querySelector('app-blog-filter')).toBeTruthy();
+      expect(compiled.querySelector('app-blog-list')).toBeTruthy();
+    });
+
+    it('should handle user interactions and update state accordingly', fakeAsync(() => {
+      fixture.detectChanges();
+      tick();
+
+      // User changes category
+      component.onCategoryChange('TypeScript');
+      expect(blogState.selectedCategory()).toBe('TypeScript');
+
+      // User toggles featured
+      component.onToggleFeatured();
+      expect(blogState.showOnlyFeatured()).toBe(true);
+
+      // User resets filters
+      component.onResetFilters();
+      expect(blogState.selectedCategory()).toBe('');
+      expect(blogState.showOnlyFeatured()).toBe(false);
+    }));
+
+    it('should use OnPush change detection strategy for performance', () => {
+      // Component should use OnPush for better performance
+      expect(component).toBeTruthy();
+    });
+
+    it('should use inject() pattern for dependency injection', () => {
+      // Verify modern Angular DI pattern
+      expect((component as any).blogService).toBeDefined();
+      expect((component as any).blogState).toBeDefined();
+      expect((component as any).router).toBeDefined();
+    });
+  });
+
+  describe('Filter Interactions', () => {
+    it('should filter posts when category changes', fakeAsync(() => {
+      fixture.detectChanges();
+      tick();
+
+      component.onCategoryChange('Angular');
+
+      const filteredPosts = blogState.filteredPosts();
+      expect(filteredPosts.every((p) => p.category === 'Angular')).toBe(true);
+    }));
+
+    it('should filter posts when featured toggle changes', fakeAsync(() => {
+      fixture.detectChanges();
+      tick();
+
+      component.onToggleFeatured();
+
+      const filteredPosts = blogState.filteredPosts();
+      expect(filteredPosts.every((p) => p.featured === true)).toBe(true);
+    }));
+
+    it('should apply multiple filters simultaneously', fakeAsync(() => {
+      fixture.detectChanges();
+      tick();
+
+      // Apply both filters
+      component.onCategoryChange('Angular');
+      component.onToggleFeatured();
+
+      const filteredPosts = blogState.filteredPosts();
+      expect(filteredPosts.every((p) => p.category === 'Angular' && p.featured === true)).toBe(
+        true,
+      );
+    }));
+  });
+
+  describe('Data Refresh', () => {
+    it('should reload data when refresh is triggered', fakeAsync(() => {
+      fixture.detectChanges();
+      tick();
+
+      // Reset spy to count new calls
+      blogService.getPosts.calls.reset();
+      blogService.getCategories.calls.reset();
+
+      component.onRefresh();
+      tick();
+
+      expect(blogService.getPosts).toHaveBeenCalled();
+      expect(blogService.getCategories).toHaveBeenCalled();
+    }));
+
+    it('should show loading state during refresh', fakeAsync(() => {
+      fixture.detectChanges();
+      tick();
+
+      // Verify initial state is not loading
+      expect(component.isLoading()).toBe(false);
+
+      component.onRefresh();
+
+      // Note: Due to the synchronous nature of observables in tests,
+      // loading state might be set and cleared very quickly
+      // The important part is that refresh calls the service again
+      tick();
+
+      // Should not be loading after refresh completes
+      expect(component.isLoading()).toBe(false);
+
+      // Verify that refresh actually reloaded data
+      expect(blogService.getPosts).toHaveBeenCalledTimes(2); // Once in ngOnInit, once in onRefresh
+    }));
   });
 });

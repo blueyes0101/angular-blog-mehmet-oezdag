@@ -16,6 +16,7 @@ import { BlogService } from '../../../../core/services/blog.service';
 import { BlogStateStore } from '../../../../core/state/blog-state.store';
 import { BlogFilterComponent } from '../blog-filter/blog-filter.component';
 import { BlogListComponent } from '../blog-list/blog-list.component';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-blog-overview-container',
@@ -38,6 +39,7 @@ export class BlogOverviewContainerComponent implements OnInit {
   private readonly blogState = inject(BlogStateStore);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly languageService = inject(LanguageService);
 
   // State signals
   readonly posts = this.blogState.filteredPosts;
@@ -117,8 +119,9 @@ export class BlogOverviewContainerComponent implements OnInit {
    */
   onAddBlog(): void {
     // Navigate to add blog page
-    this.router.navigate(['/add-blog']).then(
-      (success) => {
+    const currentLang = this.languageService.currentLanguage();
+    this.router.navigate([`/${currentLang}/add-blog-page`]).then(
+      () => {
         // Navigation successful
         this.cdr.markForCheck();
       },

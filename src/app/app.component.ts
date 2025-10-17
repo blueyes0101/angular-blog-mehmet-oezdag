@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { finalize } from 'rxjs/operators';
+import { TranslateModule } from '@ngx-translate/core';
 
 // Angular Material Imports
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -23,6 +24,8 @@ import { DemoComponent } from './demo/demo.component';
 import { BlogPost } from './core/schemas/blog.schemas';
 import { RouterStateStore } from './core/state/router-state.store';
 import { SidebarComponent } from './core/sidebar/sidebar.component';
+import { LanguageService } from './core/services/language.service';
+import { AuthStore } from './core/auth/auth.store';
 
 interface TestResult {
   success: boolean;
@@ -49,18 +52,36 @@ interface TestResult {
     MatDividerModule,
     MatDialogModule,
     MatTooltipModule,
+    TranslateModule,
     DemoComponent,
     SidebarComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
+/**
+ * Root Application Component
+ *
+ * This component:
+ * - Initializes authentication on app startup
+ * - Manages dark mode theme
+ * - Provides demo functionality for testing
+ * - Integrates with AuthStore for authentication state
+ */
 export class AppComponent implements OnInit {
   title = 'Angular Blog - Mehmet Oezdag';
 
-  // Inject RouterStateStore
+  // Inject services
   readonly routerState = inject(RouterStateStore);
+  readonly languageService = inject(LanguageService);
+  readonly authStore = inject(AuthStore);
   readonly isLoading = this.routerState.isLoading;
+
+  // Authentication state from AuthStore (Signals)
+  isAuthenticated = this.authStore.isAuthenticated;
+  userData = this.authStore.userData;
+  username = this.authStore.username;
+  roles = this.authStore.roles;
 
   // UI State
   isDarkMode = false;
@@ -91,6 +112,40 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDarkModePreference();
+    this.initializeAuthentication();
+  }
+
+  /**
+   * Initialize authentication on app startup
+   * This checks if the user is already authenticated (from stored tokens)
+   */
+  private initializeAuthentication(): void {
+    this.authStore.checkAuth().subscribe({
+      next: (result) => {
+        if (result.isAuthenticated) {
+          console.log('[App] User authenticated on startup:', result.userData);
+        } else {
+          console.log('[App] User not authenticated');
+        }
+      },
+      error: (error) => {
+        console.error('[App] Authentication check failed:', error);
+      },
+    });
+  }
+
+  /**
+   * Trigger login flow
+   */
+  login(): void {
+    this.authStore.login();
+  }
+
+  /**
+   * Trigger logout flow
+   */
+  logout(): void {
+    this.authStore.logout();
   }
 
   /**

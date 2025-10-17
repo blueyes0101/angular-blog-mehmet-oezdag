@@ -1,11 +1,14 @@
-import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgOptimizedImage, CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 import { BlogPost } from '../../../../core/schemas/blog.schemas';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-blog-card',
@@ -20,6 +23,8 @@ import { BlogPost } from '../../../../core/schemas/blog.schemas';
     MatButtonModule,
     MatIconModule,
     MatChipsModule,
+    MatTooltipModule,
+    TranslateModule,
   ],
 })
 export class BlogCardComponent {
@@ -33,13 +38,15 @@ export class BlogCardComponent {
   // Output signals
   likeBlog = output<{ id: number; likedByMe: boolean }>();
 
-  constructor(private router: Router) {}
+  private readonly router = inject(Router);
+  private readonly languageService = inject(LanguageService);
 
   /**
    * Navigate to blog detail page
    */
   onReadMore(): void {
-    this.router.navigate(['/blog-detail', this.post().id]);
+    const currentLang = this.languageService.currentLanguage();
+    this.router.navigate([`/${currentLang}/blog-detail`, this.post().id]);
   }
 
   /**
